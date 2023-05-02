@@ -1,0 +1,108 @@
+<script>
+	import LocationView from "../../components/LocationView.svelte";
+    import { API_URL, authfetch } from '../../api';
+	import TreeView from "../../components/TreeView.svelte";
+	import Products from "../../components/product/Products.svelte";
+	import Items from "../../components/item/Items.svelte";
+	import ContextMenu from "../../components/ContextMenu.svelte";
+	import EditableGenericLocationView from "./tree/[id]/EditableGenericLocationView.svelte";
+	import { injectParentLink } from "../../utils/treeManipulation";
+	import Product from "../../components/product/Product.svelte";
+    
+    export let data;
+
+    const minWidth = 1000, minHeight = 55;
+
+    let children = data.tree;
+    let w = 1500;
+    $: console.log(w);
+    
+
+    let rootTree = {
+        x: 0,
+        y: 0,
+        width: 100,
+        height: Math.max(...children.map(a => a.y + a.height), minHeight),
+        name: "인벤토리 시스템",
+        children: data.tree
+    }
+    rootTree = injectParentLink(rootTree)
+    console.log(rootTree);
+
+    let selectedLocation;
+    let hoveredLocation;
+
+</script>
+
+<div class="body">
+    <div class="tree">
+        <TreeView tree={rootTree} interact={true}>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <span slot="element" let:element 
+                class:hovered={hoveredLocation?.id == element?.id}
+                class:selected={selectedLocation?.id == element?.id}
+                on:mouseenter={() => hoveredLocation = element}
+                on:mouseleave={() => hoveredLocation = null}
+            class="tree-element" on:click={(e) => location.href=`/dashboard/tree/${element.id}`}>
+                {element?.name}
+            </span>
+        </TreeView>
+    </div>
+    <EditableGenericLocationView bind:selectedLocation bind:hoveredLocation bind:rootTree/>
+    <div class="products">
+        <Items location={selectedLocation}/>
+        <Products>
+            <slot slot="product" let:product>
+                <Product {product}/>
+            </slot>
+        </Products>
+    </div>
+</div>
+
+<style>
+    .tree-element {
+        padding: 0.5em;
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        gap: 0.5em;
+        max-width: 100%;
+        max-height: 100%;
+        align-self: stretch;
+        overflow-x: hidden;
+    }
+    .tree-element:hover {
+        background-color: coral;
+    }
+    .hovered {
+        background-color: coral;
+    }
+    .selected {
+        background-color: darkcyan;
+    }
+    .tree {
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+        flex-direction: column;
+        flex: 1 1;
+        max-width: 15em;
+        min-width: 10em;
+    }
+    .body {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        align-self: stretch;
+        justify-content: space-around;
+        flex-grow: 1;
+    }
+    
+    .products {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        max-width: 25em;
+        min-width: 20em;
+    }
+</style>
