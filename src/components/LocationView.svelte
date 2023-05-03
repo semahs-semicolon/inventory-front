@@ -1,5 +1,5 @@
 <script>
-    import { API_URL, authfetch } from '../api';
+    import { API_URL, authfetch, imageIdToUrl } from '../api';
 
 	import { createEventDispatcher } from 'svelte';
 	import ContextMenu from './ContextMenu.svelte';

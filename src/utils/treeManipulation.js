@@ -13,8 +13,8 @@ export const searchId = (tree, id) => {
 }
 
 export const findsParent = (child, parentId) => {
-    while (child.parent != null) {
-        if (child.parent.id == parentId) return true;
+    while (child != null) {
+        if (child.id == parentId) return true;
         child = child.parent;
     }
     return false;
