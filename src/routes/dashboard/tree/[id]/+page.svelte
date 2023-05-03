@@ -24,10 +24,16 @@
 
 
     let editing = false;
+    let treeShow = false;
+    let toolbarShow = false;
 </script>
 
+<div class="collapsibleControl">
+    <button on:click={() => treeShow = !treeShow}>Tree</button>
+    <button on:click={() => toolbarShow = !toolbarShow}>Toolbar</button>
+</div>
 <div class="body">
-    <div class="tree">
+    <div class="tree"class:showHidden={treeShow}>
         <TreeView tree={{children: data.fullTree}} interact={true}>
             <div slot="title" class="treeTitleH">
                 <span class="treeTitle">위치 나무</span>
@@ -46,7 +52,7 @@
 
     <EditableGenericLocationView bind:selectedLocation bind:hoveredLocation bind:rootTree={tree}/>
 
-    <div class="products">
+    <div class="products"class:showHidden={toolbarShow}>
         <Items location={selectedLocation}/>
         <Products>
             <slot slot="product" let:product>
@@ -57,21 +63,19 @@
 </div>
 
 <style>
-    .float-view {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        z-index: 100;
-    }
-    .treeTitleH {
-        display: flex;
-    }
-    .treeTitle {
+    .tree-element {
         padding: 0.5em;
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        gap: 0.5em;
+        max-width: 100%;
+        max-height: 100%;
+        align-self: stretch;
+        overflow-x: hidden;
     }
-    .background {
-        width: 100%;
-        height: 100%;
+    .tree-element:hover {
+        background-color: coral;
     }
     .hovered {
         background-color: coral;
@@ -79,21 +83,23 @@
     .selected {
         background-color: darkcyan;
     }
-    .tree-element {
+    .treeTitleH {
+        display: flex;
+        flex-direction: row;
         padding: 0.5em;
-        cursor: pointer;
-    }
-    .tree-element:hover {
-        background-color: coral;
+        gap: 0.5em;
     }
     .tree {
-        display: flex;
+        display: none;
         align-items: stretch;
         justify-content: stretch;
         flex-direction: column;
         flex: 1 1;
         max-width: 15em;
         min-width: 10em;
+        z-index: 10;
+        height: 100%;
+        background-color: white;
     }
     .body {
         display: flex;
@@ -102,53 +108,47 @@
         align-self: stretch;
         justify-content: space-around;
         flex-grow: 1;
-    }
-    .relative {
         position: relative;
-        flex-grow: 1;
-        overflow: auto;
-    }
-
-
-    .title {
-        display: flex;
-        padding: 0.5em;
-        cursor: pointer;
-    }
-    .title:hover {
-        background-color: coral;
-    }
-    .title > span {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-    .draggable {
-        cursor: grab;
-        background-color: orange;
-    }
-    .navigatable {
-        cursor: pointer;
-        background-color: greenyellow;
-    }
-    .draggable:active {
-        cursor: grabbing;
     }
     
     .products {
-        display: flex;
+        display: none;
         flex-direction: column;
         flex-grow: 1;
         max-width: 25em;
         min-width: 20em;
+        height: 100%;
+        z-index: 10;
+        background-color: white;
     }
-
-    hr {
-        align-self: auto;
-        flex-direction: column;
-        margin: 0;
+    .collapsibleControl {
+        display: none;
+    }
+    .showHidden {
+        display: flex;
+    }
+    @media(min-width: 1000px) {
+        .tree {
+            display: flex;
+        }
+        .products {
+            display: flex;
+        }
+    }
+    @media(max-width: 1000px) {
+        .tree {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .products {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .collapsibleControl {
+            display: flex;
+            justify-content: space-between;
+        }
     }
 </style>

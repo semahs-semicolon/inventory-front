@@ -2,7 +2,7 @@ import { get }from 'svelte/store';
 import { ACCESS_TOKEN } from "./stores";
 
 
-export const API_URL = "http://localhost:8080"
+export const API_URL = "https://seda-inventory.kro.kr/api"
 // export const API_URL = "http://192.168.219.100/panel/api"
 
 export function authfetch(input, init={method: 'GET', headers: {}}) {
@@ -28,5 +28,5 @@ export function authfetch(input, init={method: 'GET', headers: {}}) {
 // }
 
 export function imageIdToUrl(id) {
-    return `${API_URL}/images/${id}`;
+    return `https://seda-inventory.kro.kr/s3/images/${id}`;
 }

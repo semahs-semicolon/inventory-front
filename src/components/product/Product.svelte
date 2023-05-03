@@ -72,6 +72,7 @@
         align-self: stretch;
         height: 3em;
         overflow-x: hidden;
+        background-color: white;
     }
     .tree-element:hover {
         background-color: coral;
