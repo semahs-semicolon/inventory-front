@@ -1,5 +1,6 @@
 <script>
 	import { API_URL, authfetch } from "../../api";
+    import { LAST_SEARCH_RESULT} from '../../stores';
 
 
     export let search = '';
@@ -14,7 +15,7 @@
 
     let lastURL = `${API_URL}/products?search=${encodeURIComponent(search)}`;
     let page = 0;
-    let size = 25;
+    let size = 10;
     let elements;
 
     const doSearch = (search) => {
@@ -23,6 +24,7 @@
     }
     $: {
         elements = authfetch(`${lastURL}&size=${size}&page=${page}`).then(a => a.json());
+        elements.then(res => {$LAST_SEARCH_RESULT = res})
     }
 </script>
 
@@ -37,6 +39,12 @@
     <div class="content">
         {#await elements}
             <h1>Loading</h1>
+
+            {#each $LAST_SEARCH_RESULT as product}
+                <slot product={product} name="product">
+                    <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
+                </slot>
+            {/each}
         {:then products}
             {#each products as product}
                 <slot product={product} name="product">

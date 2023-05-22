@@ -10,19 +10,13 @@
 	import Product from "../../components/product/Product.svelte";
     
     export let data;
-
-    const minWidth = 1000, minHeight = 55;
-
-    let children = data.tree;
-    let w = 1500;
-    $: console.log(w);
     
 
     let rootTree = {
         x: 0,
         y: 0,
         width: 100,
-        height: Math.max(...children.map(a => a.y + a.height), minHeight),
+        height: 100,
         name: "인벤토리 시스템",
         children: data.tree
     }

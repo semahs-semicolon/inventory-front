@@ -296,6 +296,12 @@
         position: relative;
         flex-grow: 1;
         overflow: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: stretch;
+        align-items: stretch;
+        height: 100%;
     }
     .background {
         width: 100%;
@@ -327,7 +333,7 @@
     }
     .draggable {
         cursor: grab;
-        background-color: orange;
+        background-color: rgba(255, 166, 0, 0.825);
     }
     .navigatable {
         cursor: pointer;

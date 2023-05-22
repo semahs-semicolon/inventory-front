@@ -15,7 +15,7 @@
     let hoveredLocation;
 
     const setup = () => {
-        tree = injectParentLink( {...data.tree, x: 0, y: 0, width: 100});
+        tree = injectParentLink( {...data.tree, x: 0, y: 0, width: 100, height: 100});
         selectedLocation = tree;
     }
     $: data.tree, (()=>{

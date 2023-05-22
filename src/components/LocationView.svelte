@@ -8,14 +8,14 @@
 
     const relScaler = 1;
     const gridWidth = 100;
+    const gridHeight = 100;
 
     export let tree;
     export let parentId;
     export let movable = false;
     export let editing = false;
 
-    let parentWidth;
-
+    let parentWidth, parentHeight;
     let x, y, width, height;
     
     $: x = tree.x;
@@ -23,13 +23,8 @@
     $: width = tree.width;
     $: height = tree.height;
 
-
-    let minHeight;
-    $: minHeight = Math.max(...tree.children.map(a => a.y + a.height));
-
     const fromRem = (val) => val * parseFloat(getComputedStyle(document.documentElement).fontSize) * relScaler;
     const toRem = (val) => val / parseFloat(getComputedStyle(document.documentElement).fontSize) / relScaler;
-
 
     let dragStatus = {
         moving: false,
@@ -50,10 +45,11 @@
         if (!movable) return;
         if (!editing) return;
 
+
 		dragStatus.moving = true;
         dragStatus.sx = e.pageX;
         dragStatus.sy = e.pageY;
-        dragStatus.stop = fromRem(tree.y);
+        dragStatus.stop = tree.y * parentHeight / gridHeight;
         dragStatus.sleft = tree.x * parentWidth / gridWidth;
 	}
     function startResize(e) {
@@ -64,7 +60,7 @@
         resizeStatus.sx = e.pageX;
         resizeStatus.sy = e.pageY;
         resizeStatus.swidth = tree.width * parentWidth / gridWidth;
-        resizeStatus.sheight = fromRem(tree.height);
+        resizeStatus.sheight = tree.height * parentHeight / gridHeight;
 
     }
 	
@@ -74,9 +70,10 @@
 			let intermediateY = dragStatus.stop + e.pageY - dragStatus.sy;
             
             tree.x = Math.floor(intermediateX * gridWidth / parentWidth);
-            tree.y = Math.floor(toRem(intermediateY));
+            tree.y = Math.floor(intermediateY * gridHeight / parentHeight);
             
             if (tree.x + tree.width > gridWidth) tree.x = gridWidth - tree.width;
+            if (tree.y + tree.height > gridHeight) tree.y = gridHeight - tree.height;
             if (tree.x < 0) tree.x = 0;
             if (tree.y < 0) tree.y = 0;
 
@@ -97,14 +94,14 @@
 			let intermediateHeight = resizeStatus.sheight + e.pageY - resizeStatus.sy;
 
             tree.width = Math.floor(intermediateWidth * gridWidth / parentWidth);
-            tree.height = Math.floor(toRem(intermediateHeight));
+            tree.height = Math.floor(intermediateHeight * gridHeight / parentHeight);
 
 
             if (tree.x + tree.width > gridWidth) tree.width = gridWidth - tree.x;
+            if (tree.y + tree.height > gridHeight) tree.height = gridHeight - tree.y;
             
             if (tree.width < 1) tree.width = 1;
             if (tree.height < 1) tree.height = 1;
-            if (tree.height < minHeight) tree.height = minHeight;
             dispatch("dimension", {
                 locationId: tree.id,
                 x: tree.x,
@@ -134,14 +131,14 @@
 <svelte:window  on:mouseup={endDrag} on:mousemove={keepDrag}
     on:keydown={keydown} on:keyup={keyup}/>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<div bind:offsetWidth={parentWidth} style:width="100%" style:height="0"/>
-    <div class="positioner" style:top={`${y * relScaler}rem`} style:left={`${x * 100 / gridWidth}%`} style:width={`${width *100/gridWidth}%`}>
+<div bind:clientWidth={parentWidth} bind:clientHeight={parentHeight} class="heightgetter"/>
+<div class="positioner" style:top={`${y * 100 / gridHeight}%`} style:left={`${x * 100 / gridWidth}%`} style:width={`${width *100/gridWidth}%`} style:height={`${height * 100 / gridHeight}%`}>
         {#if tree.backgroundId != undefined}
             <div class="background2">
-                <img src={imageIdToUrl(tree.backgroundId)}/>
+                <img src={imageIdToUrl(tree.backgroundId)} alt="background of {tree?.name}"/>
             </div>
         {/if}
-        <div class="container" style:height={`${relScaler*height}rem`}>
+        <div class="container">
             <div class="background">
                 <slot name="background" tree={tree} startDrag={startDrag}>
                 </slot>
@@ -162,6 +159,15 @@
 
 
 <style>
+    .heightgetter {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        visibility: hidden;
+    }
     .background2 {
         position: absolute;
         top: 0;
@@ -172,6 +178,8 @@
     .background2 > img {
         width: 100%;
         height: 100%;
+        object-fit: contain;
+        opacity: 0.8;
     }
     .background {
         position: absolute;
@@ -188,7 +196,7 @@
         border-color: black;
         border-width: 3px;
         border-radius: 3px;
-        background-color: white;
+        background-color: #FFFFFFBB;
         border-style: solid;
         position: absolute;
         display: flex;
@@ -202,7 +210,6 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        background-color: white;;
     }
     .resize {
         position: absolute;
