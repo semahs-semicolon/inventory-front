@@ -26,7 +26,7 @@
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                name: productName, description: productDesc, imageId: newImageId
+                name: productName, description: productDesc, imageId: newImageId, parentCategoryId: null
             })
         });
         const json = await res.json();
