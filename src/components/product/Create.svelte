@@ -22,7 +22,7 @@
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                name: productName, description: productDesc, imageId: fileData.id
+                name: productName, description: productDesc, imageId: fileData.id, parentCategoryId: null
             })
         });
         const json = await res.json();
