@@ -30,7 +30,7 @@
 
 <div class="body">
     {#if innerWidth >= 1000 || treeShow}
-        <div class="tree" class:showHidden={treeShow} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
+        <div class="tree" class:showHidden={treeShow} transition:fly|local={{duration: 250, x: '-100%', opacity: 1}}>
             <TreeView tree={fullTree} interact={true}>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div slot="title" class="tree-title-container">
@@ -62,7 +62,7 @@
         </div>
     </EditableGenericLocationView>
     {#if innerWidth >= 700 || toolbarShow}
-        <div class="products" class:showHidden={toolbarShow}  transition:fly={{duration: 250, x: '100%', opacity: 1}}>
+        <div class="products" class:showHidden={toolbarShow}  transition:fly|local={{duration: 250, x: '100%', opacity: 1}}>
             {#if toolbarShow}
             <div class="toolbarClose">
                 <CloseButton on:click={() => {toolbarShow=false;}}/>

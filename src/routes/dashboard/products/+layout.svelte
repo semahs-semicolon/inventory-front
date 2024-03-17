@@ -8,6 +8,7 @@
 	import { writable } from 'svelte/store';
 	import CloseButton from "../../../components/button/CloseButton.svelte";
 	import { fly } from "svelte/transition";
+	import { onNavigate } from '$app/navigation';
 
 	const open = writable({should: false, open: false});
 	let innerWidth = 10000;
@@ -17,16 +18,27 @@
 	
 	$: $open.should = innerWidth < 1000;
 
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
 
 	console.log($page)
 </script>
 <svelte:window bind:innerWidth bind:innerHeight />
+<div class="loadingbar"></div>
 <div class="wrapper">
 	{#if innerWidth < 1000 && $open.open}
 	<div class="bg"/>
 	{/if}
 	{#if innerWidth >= 1000 || $open.open || $page.params.id == undefined}
-		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
+		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly|local={{duration: 250, x: '-100%', opacity: 1}}>
 			<Products>
 				<div slot="product" let:product>
 					<Product {product} selected={$page.params?.id == product.id} on:click={() => {goto(`/dashboard/products/${product.id}`); $open.open = false;}}/>

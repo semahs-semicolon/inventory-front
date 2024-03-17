@@ -24,7 +24,7 @@
         </slot>
     </div>
     {#if !shrunk && element.children.length > 0}
-        <div class="line" transition:slide>
+        <div class="line" transition:slide|local>
             <hr/>
             <div class="tree-children">
                 {#each element.children as element}
