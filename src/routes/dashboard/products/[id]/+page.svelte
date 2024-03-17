@@ -1,13 +1,13 @@
 <script>
 	import { add_attribute } from 'svelte/internal';
 	import { API_URL, authfetch, imageIdToUrl } from '../../../../api.js';
-	import LocationView from '../../../../components/LocationView.svelte';
+	import LocationView from '../../../../components/location/LocationView.svelte';
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
 
     export let data;
 
     const deleteProduct = async () => {
-        await authfetch(`${API_URL}/products/${data.product.id}`, {
+        await authfetch(`${API_URL()}/products/${data.product.id}`, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json"
@@ -151,7 +151,7 @@
     .body {
         display: flex;
         flex-direction: row;
-        flex-grow: 1;
+        flex: 1;
         justify-content: stretch;
         align-items: stretch;
     }
@@ -159,7 +159,7 @@
         display: flex;
         flex-direction: column;
         flex-basis: 2;
-        flex-grow: 1;
+        flex: 1;
         border-color: black;
         border-width: 1px;
         border-style: solid;
@@ -188,7 +188,7 @@
     .restTree {
         display: flex;
         flex-basis: 1;
-        flex-grow: 1;
+        flex: 1;
     }
     .body {
         display: flex;
@@ -196,11 +196,11 @@
         align-items: stretch;
         align-self: stretch;
         justify-content: space-around;
-        flex-grow: 1;
+        flex: 1;
     }
     .relative {
         position: relative;
-        flex-grow: 1;
+        flex: 1;
         overflow: auto;
     }
 

@@ -1,10 +1,10 @@
 <script>
 	import { prevent_default } from "svelte/internal";
-	import ContextMenu from "../../../../components/ContextMenu.svelte";
-	import LocationView from "../../../../components/LocationView.svelte";
-	import { findsParent, injectParentLink, searchId } from "../../../../utils/treeManipulation";
-	import { API_URL, authfetch } from "../../../../api";
-	import TreeView from "../../../../components/TreeView.svelte";
+	import ContextMenu from "../../components/ContextMenu.svelte";
+	import LocationView from "../../components/location/LocationView.svelte";
+	import { findsParent, injectParentLink, searchId } from "../../utils/treeManipulation";
+	import { API_URL, authfetch } from "../../api";
+	import TreeView from "../../components/TreeView.svelte";
 
 
     export let rootTree;
@@ -24,7 +24,7 @@
 
 
     const save = async (e) => {
-        const res = await authfetch(`${API_URL}/locations/layout`, {
+        const res = await authfetch(`${API_URL()}/locations/layout`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
@@ -39,7 +39,7 @@
 
     const create = async (tree) => {
         const name = prompt("name?");
-        const res = await authfetch(`${API_URL}/locations`, {
+        const res = await authfetch(`${API_URL()}/locations`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -61,7 +61,7 @@
     }
     const rename = async (tree) => {
         const name = prompt("name?");
-        const res = await authfetch(`${API_URL}/locations/${tree.id}/name`, {
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}/name`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -78,7 +78,7 @@
 
     const doDelete = async (tree) => {
         if (!confirm("you sure?")) return;
-        const res = await authfetch(`${API_URL}/locations/${tree.id}`, {
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}`, {
             method: "DELETE"
         });
         if (res.status !== 200)
@@ -93,7 +93,7 @@
         if (image != undefined) {
            const formData = new FormData();
             formData.append("image", image);
-            const req1 = await authfetch(`${API_URL}/images`, {
+            const req1 = await authfetch(`${API_URL()}/images`, {
                 method: 'POST',
                 body: formData
             });
@@ -101,7 +101,7 @@
             stuff = fileData.id;
         }
 
-        const res = await authfetch(`${API_URL}/locations/${tree.id}/background`, {
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}/background`, {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json"
@@ -134,6 +134,7 @@
 
 
 <div class="relative">
+    <slot/>
     <LocationView tree={rootTree} movable={false} on:dimension={dimension} parentId={null} editing={editing} let:tree let:startDrag>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <ContextMenu slot="background" let:onContextMenu>
@@ -160,6 +161,7 @@
                 <label for="background">
                     <div class:hovered={hoveredLocation != null && hoveredLocation?.id == tree?.id}
                     class:selected = {selectedLocation != null && selectedLocation?.id == tree?.id}
+                    on:dblclick={() => { if (tree.id != null) location.href=`/dashboard/tree/${tree.id}`}}
                     class="background" on:contextmenu|self={onContextMenu} on:drop={(e) => {
                         if (e.dataTransfer.types.includes("seda/location")) {
                             e.preventDefault();
@@ -193,7 +195,7 @@
                             const data = JSON.parse(dataStr);
                             const count = parseInt(prompt("count?"));
                             
-                            authfetch(`${API_URL}/items`, {
+                            authfetch(`${API_URL()}/items`, {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json"
@@ -222,7 +224,7 @@
                             return false;
                         }
                     }}>
-                            <div class="title" 
+                            <div class="title"  class:realtitle={tree?.id != null}
                                 class:draggable={editing && tree.id !== null}
                                 class:selected={selectedLocation != null &&selectedLocation?.id == tree?.id}
                                 class:hovered={hoveredLocation != null && hoveredLocation?.id == tree?.id}
@@ -294,7 +296,7 @@
     }
     .relative {
         position: relative;
-        flex-grow: 1;
+        flex: 1;
         overflow: auto;
         width: 100%;
         display: flex;
@@ -302,16 +304,17 @@
         justify-content: stretch;
         align-items: stretch;
         height: 100%;
+        max-width: 700px;
     }
     .background {
         width: 100%;
         height: 100%;
     }
     .hovered {
-        background-color: rgba(255,127,8,0.3) !important;
+        background-color: #91ba3f4D !important;
     }
     .selected {
-        background-color: rgba(0, 139, 139, 0.3);
+        background-color: #378ee24D;
     }
 
 
@@ -320,8 +323,8 @@
         padding: 0.5em;
         cursor: pointer;
     }
-    .title:hover {
-        background-color: #FF7F5099;
+    .realtitle:hover {
+        background-color: #91ba3f4D;
     }
     .title > span {
         -webkit-touch-callout: none;

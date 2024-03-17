@@ -5,7 +5,7 @@
     let username = '', password = '', nickname = '';
 
     const signup = async () => {
-        const resp = await fetch(`${API_URL}/users/signup`, {
+        const resp = await fetch(`${API_URL()}/users/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

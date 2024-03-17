@@ -43,16 +43,24 @@
     }
     .animate {
         transition: rotate 0.5s;
+        padding: 0;
+    }
+    button {
+        background: none;
+        cursor: pointer;
+        border: none;
+        padding: 0;
     }
     .line {
         display: flex;
         flex-direction: row;
-        padding-left: 2em;
+        padding-left: 1em;
     }
 
     .tree-element {
         display: flex;
         flex-direction: column;
+        width: 100%;
     }
 
     .tree-header {
@@ -70,5 +78,8 @@
         flex-direction: column;
         align-items: start;
         padding-left: 0.5em;
+        padding-top: 0.1em;
+        gap: 0.1em;
+        width: 100%;
     }
 </style>

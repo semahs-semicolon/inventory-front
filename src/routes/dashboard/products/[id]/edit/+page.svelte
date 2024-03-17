@@ -12,7 +12,7 @@
         if (file != undefined) {
             const formData = new FormData();
             formData.append("image", file[0]);
-            const req1 = await authfetch(`${API_URL}/images`, {
+            const req1 = await authfetch(`${API_URL()}/images`, {
                 method: 'POST',
                 body: formData
             });
@@ -20,7 +20,7 @@
             newImageId = fileData.id;
         }
 
-        const res = await authfetch(`${API_URL}/products/${data.product.id}`, {
+        const res = await authfetch(`${API_URL()}/products/${data.product.id}`, {
             method: 'PATCH',
             headers: {
                 "Content-Type": "application/json"
@@ -86,7 +86,7 @@
     .name {
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        flex: 1;
         gap: 0.5em;
     }
     .image {
@@ -107,7 +107,7 @@
 .body {
         display: flex;
         flex-direction: row;
-        flex-grow: 1;
+        flex: 1;
         justify-content: stretch;
         align-items: stretch;
     }
@@ -115,7 +115,7 @@
         display: flex;
         flex-direction: column;
         flex-basis: 2;
-        flex-grow: 1;
+        flex: 1;
         border-color: black;
         border-width: 1px;
         border-style: solid;

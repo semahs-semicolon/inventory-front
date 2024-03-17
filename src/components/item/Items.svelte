@@ -7,18 +7,18 @@
 
     $: {
         if (location?.id != undefined)
-        items = authfetch(`${API_URL}/locations/${location?.id}/items`).then(data => data.json());
+        items = authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
         // else items= new Promise();
     }
     
     
     const deleteItem = async (id) => {
-        const res = await authfetch(`${API_URL}/items/${id}`, {
+        const res = await authfetch(`${API_URL()}/items/${id}`, {
             method: "DELETE"
         });
         const b = await res.text();
 
-        items = authfetch(`${API_URL}/locations/${location?.id}/items`).then(data => data.json());
+        items = authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
     }
 </script>
 
@@ -49,7 +49,7 @@
             const count = parseInt(prompt("count?"));
             
 
-            items = authfetch(`${API_URL}/items`, {
+            items = authfetch(`${API_URL()}/items`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -60,7 +60,7 @@
                     count: count
                 })
             }).then(a => {
-                return authfetch(`${API_URL}/locations/${location?.id}/items`).then(data => data.json());
+                return authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
             })
         }} on:dragover={(ev) => {
             ev.preventDefault();

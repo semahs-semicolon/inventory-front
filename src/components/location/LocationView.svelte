@@ -1,8 +1,8 @@
 <script>
-    import { API_URL, authfetch, imageIdToUrl } from '../api';
+    import { API_URL, authfetch, imageIdToUrl } from '../../api';
 
 	import { createEventDispatcher } from 'svelte';
-	import ContextMenu from './ContextMenu.svelte';
+	import ContextMenu from '../ContextMenu.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -224,7 +224,7 @@
     .container {
         position: relative;
         overflow: auto;
-        flex-grow: 1;
+        flex: 1;
         align-self: auto;
         width: 100%;
 

@@ -17,7 +17,7 @@
     let count = 1;
 
     const createItem = async () => {
-        await authfetch(`${API_URL}/items`, {
+        await authfetch(`${API_URL()}/items`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -77,7 +77,7 @@
         display: flex;
         flex-direction: row;
         gap: 1em;
-        flex-grow: 1;
+        flex: 1;
     }
     .item {
         display: flex;

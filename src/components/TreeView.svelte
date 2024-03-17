@@ -8,9 +8,8 @@
 
 <div class="tree">
     <slot name="title">
-        <span class="title">위치 나무</span>
+        <span class="tree-title">위치 나무</span>
     </slot>
-    <hr/>
     <div class="tree-contents">
         {#each tree.children as element}
             <TreeElement element={element} interact={interact} let:element>
@@ -25,25 +24,24 @@
         display: flex;
         flex-direction: column;
         align-items: start;
-        overflow-x: auto;
-        overflow-y: auto;
-        flex-grow: 1;
-        border-width: 1px;
-        border-color: black;
-        border-style: solid;
+        flex: 1;
+        background-color: rgb(246, 242, 249);
     }
     .tree-contents {
         display: flex;
+        flex: 1;
         flex-direction: column;
-        padding: 0.5em;
+        overflow-x: auto;
+        overflow-y: auto;
+        width: 100%;
+        height: 100%;
+        padding-left: 1em;
+        padding-right: 1em;
     }
 
     hr {
         align-self: stretch;
         flex-direction: column;
         margin: 0;
-    }
-    .title {
-        padding: 0.5em;
     }
 </style>

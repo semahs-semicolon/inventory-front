@@ -5,7 +5,7 @@
     let username = '', password = '', nickname = '';
 
     const signin = async () => {
-        const resp = await fetch(`${API_URL}/signin`, {
+        const resp = await fetch(`${API_URL()}/signin`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -10,13 +10,13 @@
     const create = async () => {
         const formData = new FormData();
         formData.append("image", file[0]);
-        const req1 = await authfetch(`${API_URL}/images`, {
+        const req1 = await authfetch(`${API_URL()}/images`, {
             method: 'POST',
             body: formData
         });
         const fileData = await req1.json();
 
-        const res = await authfetch(`${API_URL}/products`, {
+        const res = await authfetch(`${API_URL()}/products`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -81,7 +81,7 @@
     .name {
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        flex: 1;
         gap: 0.5em;
     }
     .image {

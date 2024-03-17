@@ -10,16 +10,16 @@
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             doSearch(search);
-        }, 1000);
+        }, 300);
     }
 
-    let lastURL = `${API_URL}/products?search=${encodeURIComponent(search)}`;
+    let lastURL = `${API_URL()}/products?search=${encodeURIComponent(search)}`;
     let page = 0;
     let size = 10;
     let elements;
 
     const doSearch = (search) => {
-        lastURL = `${API_URL}/products?search=${encodeURIComponent(search)}`;
+        lastURL = `${API_URL()}/products?search=${encodeURIComponent(search)}`;
         page = 0;
     }
     $: {
