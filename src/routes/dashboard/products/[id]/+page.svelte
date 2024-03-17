@@ -1,8 +1,11 @@
 <script>
-	import { add_attribute } from 'svelte/internal';
+	import { add_attribute, getContext } from 'svelte/internal';
 	import { API_URL, authfetch, imageIdToUrl } from '../../../../api.js';
 	import LocationView from '../../../../components/location/LocationView.svelte';
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
+
+    const open = getContext('menu-context');
+
 
     export let data;
 
@@ -40,10 +43,17 @@
 </script>
 
 <div class="body">
+    <slot/>
     <div class="content">
         <div class="header">
-            <span>Product Details</span>&nbsp;
-            <a href="javascript:history.back()">Go back</a>
+            {#if $open.should}
+                <button on:click={() => {$open.open = !$open.open}}>
+                    <span class="material-symbols-outlined">
+                        menu
+                    </span>
+                </button>
+            {/if}
+            <span>물품 정보</span>
         </div>
         <hr/>
         <div class="real-content">
@@ -154,6 +164,7 @@
         flex: 1;
         justify-content: stretch;
         align-items: stretch;
+        background-color: white;
     }
     .content {
         display: flex;
@@ -167,6 +178,8 @@
     .header {
         display: flex;
         padding: 0.5em;
+        align-items: center;
+        gap: 0.5em;
     }
     .real-content {
         display: flex;

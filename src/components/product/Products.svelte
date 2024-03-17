@@ -10,19 +10,29 @@
     let name = '';
 </script>
 
-{#if creating}
+<div class="products">
+    {#if creating}
         <Create bind:productName={$SEARCH} on:productCreation={(js) => {creating=false;}}>
             <slot slot="header">
-                <button on:click={() => creating=false}>search</button>
+                <button on:click={() => creating=false}>검색</button>
             </slot>
         </Create>
-{:else}
+    {:else}
         <Search bind:search={$SEARCH}>
             <slot slot="header">
-                <button on:click={() => creating=true}>new</button>
+                <button on:click={() => creating=true}>+</button>
             </slot>
             <slot slot="product" name="product" let:product product={product}>
                 <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
             </slot>
         </Search>
-{/if}
+    {/if}
+</div>
+
+<style>
+    .products {
+        display: flex;
+        flex: 1;
+        background-color: white;
+    }
+</style>

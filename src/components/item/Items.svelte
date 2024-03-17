@@ -25,7 +25,7 @@
 {#if location?.id == undefined}
     <div class="products">
         <div class="header">
-            <span>Items</span>
+            <span>물품</span>
         </div>
         <hr/>
 
@@ -36,8 +36,8 @@
 {:else}
     <div class="products">
         <div class="header">
-            <span>Items in .. {location.name} ({location.id})</span>
-            <span>Drag to add item</span>
+            <span>물품 목록:  {location.name} ({location.id})</span>
+            <span>드래그해서 물품 추가</span>
         </div>
         <hr/>
 

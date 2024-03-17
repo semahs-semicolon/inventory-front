@@ -10,6 +10,7 @@
 	import { fly } from "svelte/transition";
 	import SecondaryButton from "../button/SecondaryButton.svelte";
 	import CloseButton from "../button/CloseButton.svelte";
+	import { goto } from "$app/navigation";
     
     export let rootTree;
     export let fullTree;
@@ -43,13 +44,13 @@
                     class:selected={selectedLocation?.id == element?.id}
                     on:mouseenter={() => hoveredLocation = element}
                     on:mouseleave={() => hoveredLocation = null}
-                    class="tree-element" on:click={(e) => location.href=`/dashboard/tree/${element.id}`}>
+                    class="tree-element" on:click={(e) => {goto(`/dashboard/tree/${element.id}`); treeShow=false;}}>
                     {element?.name}
                 </span>
             </TreeView>
         </div>
     {/if}
-    {#if treeShow || toolbarShow} 
+    {#if (treeShow&& innerWidth < 1000 || toolbarShow&& innerWidth < 700) } 
         <div class="darkbg"/>
     {/if}
     <EditableGenericLocationView bind:selectedLocation bind:hoveredLocation bind:rootTree>
@@ -70,7 +71,7 @@
             <Items location={selectedLocation}/>
             <Products>
                 <slot slot="product" let:product>
-                    <Product {product}/>
+                    <Product {product} draggable={true}/>
                 </slot>
             </Products>
         </div>
@@ -97,7 +98,6 @@
         padding: 1em;
     }
     .toolbarClose {
-        display: flex;
         position: absolute;
         left: -2.5em;
         padding: 0.5em;
@@ -162,6 +162,7 @@
     }
     
     .products {
+        position: relative;
         display: none;
         flex-direction: column;
         flex: 1;
@@ -218,6 +219,7 @@
             position: absolute;
             top: 0;
             right: 0;
+            z-index: 40;
         }
     }
 </style>

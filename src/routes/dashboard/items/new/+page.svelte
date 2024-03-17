@@ -71,7 +71,7 @@
         flex-direction: column;
     }
     .tree-element:hover {
-        background-color: coral;
+        background-color: #5a8325;
     }
     .container {
         display: flex;

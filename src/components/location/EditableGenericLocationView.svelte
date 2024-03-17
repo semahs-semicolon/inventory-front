@@ -5,6 +5,7 @@
 	import { findsParent, injectParentLink, searchId } from "../../utils/treeManipulation";
 	import { API_URL, authfetch } from "../../api";
 	import TreeView from "../../components/TreeView.svelte";
+	import { goto } from "$app/navigation";
 
 
     export let rootTree;
@@ -161,7 +162,7 @@
                 <label for="background">
                     <div class:hovered={hoveredLocation != null && hoveredLocation?.id == tree?.id}
                     class:selected = {selectedLocation != null && selectedLocation?.id == tree?.id}
-                    on:dblclick={() => { if (tree.id != null) location.href=`/dashboard/tree/${tree.id}`}}
+                    on:dblclick={() => { if (tree.id != null) goto(`/dashboard/tree/${tree.id}`)}}
                     class="background" on:contextmenu|self={onContextMenu} on:drop={(e) => {
                         if (e.dataTransfer.types.includes("seda/location")) {
                             e.preventDefault();

@@ -31,20 +31,20 @@
 
 <div class="products">
     <div class="header">
-        <span>Products</span>
-        <input type="text" placeholder="asdasd" class="grow" bind:value={search}/>
+        <span>카탈로그</span>
+        <input type="text" placeholder="입력하다 검색어" class="grow" bind:value={search}/>
         <slot name="header"/>
     </div>
     <hr/>
     <div class="content">
         {#await elements}
-            <h1>Loading</h1>
 
             {#each $LAST_SEARCH_RESULT as product}
                 <slot product={product} name="product">
                     <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
                 </slot>
             {/each}
+            <h1>Loading</h1>
         {:then products}
             {#each products as product}
                 <slot product={product} name="product">
