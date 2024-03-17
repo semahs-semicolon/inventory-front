@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "vite dev --host 0.0.0.0",
 		"build": "vite build",
 		"preview": "vite preview",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
@@ -11,12 +11,13 @@
 		"deploy": "docker build . -t registry.dungeons.guide/seda-inventory-front:1.0 && docker push registry.dungeons.guide/seda-inventory-front:1.0"
 	},
 	"devDependencies": {
+		"@prgm/sveltekit-progress-bar": "^2.0.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-svelte3": "^4.0.0",
+		"eslint-plugin-svelte": "^2.35.1",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^4.0.0",
@@ -24,6 +25,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/adapter-static": "^3.0.0"
+		"@sveltejs/adapter-static": "^3.0.0",
+		"mobile-drag-drop": "^3.0.0-rc.0"
 	}
 }

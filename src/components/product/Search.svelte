@@ -1,6 +1,8 @@
 <script>
 	import { API_URL, authfetch } from "../../api";
     import { LAST_SEARCH_RESULT} from '../../stores';
+	import PrimaryButton from "../button/PrimaryButton.svelte";
+	import TextField from "../button/TextField.svelte";
 
 
     export let search = '';
@@ -32,7 +34,7 @@
 <div class="products">
     <div class="header">
         <span>카탈로그</span>
-        <input type="text" placeholder="입력하다 검색어" class="grow" bind:value={search}/>
+        <TextField placeholder="입력하다 검색어" class="grow" bind:value={search}/>
         <slot name="header"/>
     </div>
     <hr/>
@@ -44,7 +46,7 @@
                     <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
                 </slot>
             {/each}
-            <h1>Loading</h1>
+            <span>검색중...</span>
         {:then products}
             {#each products as product}
                 <slot product={product} name="product">
@@ -52,9 +54,9 @@
                 </slot>
             {/each}
             <span class="page">
-                <button on:click={() => page--} disabled={page == 0}>prev</button>
-                {page+1}
-                <button on:click={() => page++} disabled={products.length != size}>next</button>
+                <PrimaryButton on:click={() => page--} disabled={page == 0}>이전 페이지</PrimaryButton>
+                {page+1} 페이지
+                <PrimaryButton on:click={() => page++} disabled={products.length != size}>다음 페이지</PrimaryButton>
             </span>
         {/await}
     </div>
@@ -73,13 +75,17 @@
         display: flex;
         flex-direction: column;
         padding: 0.5em;
-        flex: 1;
+        flex: 1 auto;
         overflow-y: auto;
+        background-color: #EFEFEF;
+        gap: 0.5em;
+        height: 0;
     }
     .header {
         display: flex;
         padding: 0.5em;
         gap: 1em;
+        align-items: center;
     }
 
     hr {
@@ -87,12 +93,13 @@
         flex-direction: column;
         margin: 0;
     }
-    .grow {
+    .header :global(.grow) {
         flex: 1;
     }
     .page {
         padding: 0.5em;
         justify-content: space-between;
         display: flex;
+        align-items: center;
     }
 </style>

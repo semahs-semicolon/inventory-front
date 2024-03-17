@@ -10,7 +10,7 @@
 <div class="tree-element" draggable={draggable} class:enabledrag={draggable} on:dragstart={(e) => {
     e.dataTransfer.dropEffect ="move";
     e.dataTransfer.setData("seda/product", JSON.stringify(product));
-}} class:selected={selected} on:click>
+}} class:selected={selected} on:click on:dblclick>
     <div class="image">
         {#if product.primaryImage != undefined}
             <img src={imageIdToUrl(product.primaryImage)}/>
@@ -72,7 +72,7 @@
         max-width: 100%;
         max-height: 100%;
         align-self: stretch;
-        height: 3.5em;
+        min-height: 3em;
         border-radius: 0.5em;
         overflow-x: hidden;
         background-color: white;

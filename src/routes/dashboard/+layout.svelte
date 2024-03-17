@@ -1,4 +1,19 @@
 
+<script>
+	import { onNavigate } from '$app/navigation';
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
+	});
+</script>
+
 <div class="header">
     <a class="header-title" href="/dashboard">과학실 물품관리 시스템</a>
     <a href="/dashboard/products">물품 검색</a>

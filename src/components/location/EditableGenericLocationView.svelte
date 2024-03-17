@@ -130,16 +130,17 @@
             src = undefined;
         }
     }
+    let tree = {};
 </script>
 
 
 
 <div class="relative">
     <slot/>
-    <LocationView tree={rootTree} movable={false} on:dimension={dimension} parentId={null} editing={editing} let:tree let:startDrag>
+    <LocationView tree={rootTree} movable={false} on:dimension={dimension} parentId={null} editing={editing}>
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <ContextMenu slot="background" let:onContextMenu>
-                <div slot="menu" class="menu">
+            <ContextMenu slot="background" let:tree  let:startDrag  let:onContextMenu>
+                <div slot="menu" class="menu" >
                     <span>{tree.name}</span>
                     <hr/>
                     <button on:click={() => create(tree)}>Create New</button>

@@ -115,7 +115,7 @@
         gap: 1em;
     }
     .image {
-        width: 20em;
+        width: 10em;
     }
     .right {
         display: flex;

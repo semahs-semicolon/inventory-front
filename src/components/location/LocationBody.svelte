@@ -30,7 +30,7 @@
 
 <div class="body">
     {#if innerWidth >= 1000 || treeShow}
-        <div class="tree" class:showHidden={treeShow} transition:fly|local={{duration: 250, x: '-100%', opacity: 1}}>
+        <div class="tree" class:showHidden={treeShow} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
             <TreeView tree={fullTree} interact={true}>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div slot="title" class="tree-title-container">
@@ -39,7 +39,7 @@
                         <CloseButton on:click={() => treeShow=false}/>
                     {/if}
                 </div>
-                <span slot="element" let:element 
+                <span slot="element"  let:element 
                     class:hovered={hoveredLocation?.id == element?.id}
                     class:selected={selectedLocation?.id == element?.id}
                     on:mouseenter={() => hoveredLocation = element}
@@ -62,16 +62,19 @@
         </div>
     </EditableGenericLocationView>
     {#if innerWidth >= 700 || toolbarShow}
-        <div class="products" class:showHidden={toolbarShow}  transition:fly|local={{duration: 250, x: '100%', opacity: 1}}>
+        <div class="products" class:showHidden={toolbarShow}  transition:fly={{duration: 250, x: '100%', opacity: 1}}>
             {#if toolbarShow}
             <div class="toolbarClose">
                 <CloseButton on:click={() => {toolbarShow=false;}}/>
             </div>
             {/if}
             <Items location={selectedLocation}/>
-            <Products>
+            <Products fullscreen={toolbarShow && innerWidth < 700}>
                 <slot slot="product" let:product>
-                    <Product {product} draggable={true}/>
+                    <Product {product} draggable={true} on:dblclick={async (e) => {
+                        if (selectedLocation.id == undefined) return;
+                        window.dispatchEvent(new CustomEvent("current-location-item-update", {detail: {id: product.id}}))
+                    }}/>
                 </slot>
             </Products>
         </div>
@@ -102,8 +105,8 @@
         left: -2.5em;
         padding: 0.5em;
         justify-content: start;
-        width: 100%;
-        z-index: 200;
+        z-index: 40;
+        background-color: white;
     }
     .toolbarClose > button {
         padding: 0.5em;
@@ -170,6 +173,7 @@
         min-width: 20em;
         height: 100%;
         z-index: 20;
+        min-height: 1em;
         background-color: white;
     }
     .collapsibleControl {
@@ -220,6 +224,8 @@
             top: 0;
             right: 0;
             z-index: 40;
+            max-width: 92vw;
+            min-width: 92vw;
         }
     }
 </style>

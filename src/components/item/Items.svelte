@@ -1,5 +1,6 @@
 <script>
 	import { API_URL, authfetch, imageIdToUrl } from "../../api";
+	import PrimaryButton from "../button/PrimaryButton.svelte";
 
     export let location;
 
@@ -10,17 +11,52 @@
         items = authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
         // else items= new Promise();
     }
-    
-    
-    const deleteItem = async (id) => {
-        const res = await authfetch(`${API_URL()}/items/${id}`, {
-            method: "DELETE"
-        });
-        const b = await res.text();
 
-        items = authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
+
+    const changeCount = async (id) => {
+        const theItem = (await items).find(a => a.product.id == id) ?? {count: 0};
+        let count = parseInt(prompt("count? (Previously "+theItem.count+")"   ));
+        if (count == 0 || isNaN(count) || count == undefined) return;
+        count += theItem.count;
+
+        let intermediate;
+        if (count <= 0) {
+            // delete
+            intermediate = authfetch(`${API_URL()}/items/${theItem.id}`, {
+                method: "DELETE"
+            });
+        } else if (theItem.count == 0) {
+            // create new
+            intermediate = authfetch(`${API_URL()}/items`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    productId: id,
+                    locationId: location.id,
+                    count: count
+                })
+            })
+        } else {
+            // set.
+            intermediate = authfetch(`${API_URL()}/items/${theItem.id}/count`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    count: count
+                })
+            })
+        }
+        items = intermediate.then(a => {
+            return authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
+        })
     }
 </script>
+<svelte:window on:current-location-item-update={(e) => {  changeCount(e.detail.id) }}/>
+
 
 {#if location?.id == undefined}
     <div class="products">
@@ -30,14 +66,14 @@
         <hr/>
 
         <div class="content">
-            <h3>Select one</h3>
+            <h3>위치를 선택하세요</h3>
         </div>
     </div>
 {:else}
     <div class="products">
         <div class="header">
             <span>물품 목록:  {location.name} ({location.id})</span>
-            <span>드래그해서 물품 추가</span>
+            <span>드래그/더블클릭 통해 추가</span>
         </div>
         <hr/>
 
@@ -46,22 +82,7 @@
             const dataStr = e.dataTransfer.getData("seda/product");
             if (dataStr == undefined) return;
             const data = JSON.parse(dataStr);
-            const count = parseInt(prompt("count?"));
-            
-
-            items = authfetch(`${API_URL()}/items`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    productId: data.id,
-                    locationId: location.id,
-                    count: count
-                })
-            }).then(a => {
-                return authfetch(`${API_URL()}/locations/${location?.id}/items`).then(data => data.json());
-            })
+            changeCount(data.id);
         }} on:dragover={(ev) => {
             ev.preventDefault();
             if (ev.dataTransfer.types.includes("seda/product")) {
@@ -77,7 +98,7 @@
             {:then itemList}
                 {#each itemList as item}
                     <slot item={item}>
-                        <span class="item">
+                        <span class="item" on:click={() => changeCount(item.product.id)}>
                             <span>{item.count}x</span> 
                             {#if item.product.primaryImage == null}
                             <div class="box image">
@@ -86,10 +107,7 @@
                             {:else}
                             <img class="image" src={imageIdToUrl(item.product.primaryImage)}/>
                             {/if}
-                            <a href={`/dashboard/products/${item.product.id}`}>{item.product.name}</a> <button on:click={() => 
-                            {
-                                if (confirm("u sure?")) deleteItem(item.id)
-                            }}>delete</button>
+                            <a href={`/dashboard/products/${item.product.id}`}>{item.product.name}</a> 
                         </span>
                     </slot>
                 {:else}
@@ -107,6 +125,9 @@
         justify-content: space-between;
         gap: 1em;
         align-items: center;
+        padding: 0.5em;
+        border-radius: 0.5em;
+        background-color: white;
     }
     .image {
         height: 1.5em;
@@ -123,6 +144,9 @@
     .item > a {
         flex: 1;
     }
+    .item:hover {
+        background-color: white;
+    }
     .products {
         display: flex;
         flex-direction: column;
@@ -135,9 +159,11 @@
         display: flex;
         flex-direction: column;
         padding: 0.5em;
-        flex: 1;
+        flex: 1 auto;
         overflow-y: auto;
+        background-color: #EFEFEF;
         gap: 0.5em;
+        height: 0;
     }
     .header {
         display: flex;

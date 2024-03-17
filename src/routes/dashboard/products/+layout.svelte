@@ -8,7 +8,7 @@
 	import { writable } from 'svelte/store';
 	import CloseButton from "../../../components/button/CloseButton.svelte";
 	import { fly } from "svelte/transition";
-	import { onNavigate } from '$app/navigation';
+	import Search from "../../../components/product/Search.svelte";
 
 	const open = writable({should: false, open: false});
 	let innerWidth = 10000;
@@ -18,16 +18,6 @@
 	
 	$: $open.should = innerWidth < 1000;
 
-	onNavigate((navigation) => {
-		if (!document.startViewTransition) return;
-
-		return new Promise((resolve) => {
-			document.startViewTransition(async () => {
-				resolve();
-				await navigation.complete;
-			});
-		});
-	});
 
 	console.log($page)
 </script>
@@ -38,17 +28,21 @@
 	<div class="bg"/>
 	{/if}
 	{#if innerWidth >= 1000 || $open.open || $page.params.id == undefined}
-		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly|local={{duration: 250, x: '-100%', opacity: 1}}>
-			<Products>
+		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
+			<Search>
 				<div slot="product" let:product>
 					<Product {product} selected={$page.params?.id == product.id} on:click={() => {goto(`/dashboard/products/${product.id}`); $open.open = false;}}/>
 				</div>
-			</Products>
-			{#if $open.open}
-				<div class="toolbarClose">
-					<CloseButton on:click={() => {$open.open = false}}/>
+
+				<div slot="header" class="header">
+					{#if $open.open}
+						<div class="toolbarClose">
+							<CloseButton on:click={() => {$open.open = false}}/>
+						</div>
+					{/if}
 				</div>
-			{/if}
+			</Search>
+			
 		</div>
 	{/if}
 	<slot>
@@ -74,6 +68,7 @@
 		display: flex;
 		max-width: 500px;
 		z-index: 40;
+		background-color: white;
 	}
 	@media(max-width: 1000px) {
 		.responsive {
@@ -81,7 +76,6 @@
 			align-items: stretch;
 			justify-content: stretch;
 			width: 100%;
-			width: 500px;
 			position: absolute;
 			height: 100%;
 		}
@@ -92,8 +86,7 @@
 	.menu {
 		left: 0;
 	}
-	.toolbarClose {
-		position: absolute;
-		right: -1.5em;
+	.header {
+		align-items: center;
 	}
 </style>

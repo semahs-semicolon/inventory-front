@@ -7,7 +7,6 @@
     let shrunk = false;
 
     export let interact = false;
-
 </script>
 
 <div class="tree-element">
@@ -24,12 +23,12 @@
         </slot>
     </div>
     {#if !shrunk && element.children.length > 0}
-        <div class="line" transition:slide|local>
+        <div class="line" transition:slide>
             <hr/>
             <div class="tree-children">
-                {#each element.children as element}
-                    <svelte:self element={element} interact={interact} let:element>        
-                        <slot name="element" slot="element" element={element}/>
+                {#each element.children as child}
+                    <svelte:self element={child} interact={interact}   >
+                        <slot name="element" slot="element" let:element element={element} />
                     </svelte:self>
                 {/each}
             </div>

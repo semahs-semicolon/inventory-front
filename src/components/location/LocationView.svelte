@@ -224,7 +224,7 @@
     .container {
         position: relative;
         overflow: auto;
-        flex: 1;
+        flex-grow: 1;
         align-self: auto;
         width: 100%;
 

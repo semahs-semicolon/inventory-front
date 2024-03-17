@@ -4,23 +4,24 @@
     import {SEARCH} from '../../stores';
 	import Create from "./Create.svelte";
 	import Search from "./Search.svelte";
+	import PrimaryButton from "../button/PrimaryButton.svelte";
 
     let creating = false;
-
+    export let fullscreen = false;
     let name = '';
 </script>
 
-<div class="products">
+<div class="products" class:fixed={fullscreen && creating}>
     {#if creating}
         <Create bind:productName={$SEARCH} on:productCreation={(js) => {creating=false;}}>
             <slot slot="header">
-                <button on:click={() => creating=false}>검색</button>
+                <PrimaryButton on:click={() => creating=false}>검색</PrimaryButton>
             </slot>
         </Create>
     {:else}
         <Search bind:search={$SEARCH}>
             <slot slot="header">
-                <button on:click={() => creating=true}>+</button>
+                <PrimaryButton on:click={() => creating=true}>+</PrimaryButton>
             </slot>
             <slot slot="product" name="product" let:product product={product}>
                 <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
@@ -32,7 +33,15 @@
 <style>
     .products {
         display: flex;
-        flex: 1;
+        flex: 2;
         background-color: white;
     }
+    .fixed {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        z-index: 60;
+    }
+    
 </style>

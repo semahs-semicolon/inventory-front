@@ -12,8 +12,8 @@
     </slot>
     <div class="tree-contents">
         {#each tree.children as element}
-            <TreeElement element={element} interact={interact} let:element>
-                <slot name="element" slot="element" element={element}/>
+            <TreeElement element={element} interact={interact} >
+                <slot name="element" slot="element" let:element element={element}/>
             </TreeElement>
         {/each}
     </div>

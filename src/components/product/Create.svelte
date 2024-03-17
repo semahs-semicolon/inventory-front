@@ -1,6 +1,9 @@
 <script>
 	import { createEventDispatcher } from "svelte";
 	import { API_URL, authfetch } from "../../api";
+	import PrimaryButton from "../button/PrimaryButton.svelte";
+	import TextField from "../button/TextField.svelte";
+	import TextArea from "../button/TextArea.svelte";
 
     const dispatch = createEventDispatcher();
 
@@ -41,7 +44,7 @@
 
 <div class="products">
     <div class="header">
-        <span>Create New</span>
+        <span>물품을 카탈로그에 추가</span>
         <slot name="header"/>
     </div>
     <hr/>
@@ -50,23 +53,24 @@
             <div class="image">
                 <label for="file-input">
                     {#if file == undefined || src == null}
-                        <img src="/add_a_photo_outlined.svg" alt="upload"/>
+                        <img src="/add_a_photo_outlined.svg" alt="upload"/><br/>
+                        <span>사진 첨부</span>
                     {:else}
                         <img src={src} alt="uploaded"/>
                     {/if}
                 </label>
-                <input id="file-input" type="file" accept="image/jpeg,image/png,image/gif,image/jpg,image/webp" hidden bind:files={file}/>
+                <input id="file-input" type="file" capture="environment" accept="image/jpeg,image/png,image/gif,image/jpg,image/webp" hidden bind:files={file}/>
             </div>
             <div class="name">
-                <span>Product name</span>
-                <input type="text" placeholder="Type product name" bind:value={productName}>
+                <span>물품 이름</span>
+                <TextField type="text" placeholder="Type product name" bind:value={productName}/>
             </div>
         </div>
-        <span>Product Desc</span>
+        <span>물품 설명</span>
 
-        <textarea bind:value={productDesc}/>
+        <TextArea bind:value={productDesc} rows="5" placeholder="간략한 물품 설명"/>
 
-        <button on:click={create} disabled={productName == "" || file == null}>SAVE!</button>
+        <PrimaryButton on:click={create} disabled={productName == "" || file == null}>물품을 카탈로그에 추가하기</PrimaryButton>
 
     </div>
 </div>
@@ -85,8 +89,8 @@
         gap: 0.5em;
     }
     .image {
-        width: 3em;
-        height: 3em;
+        width: 5em;
+        height: 5em;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -116,6 +120,8 @@
         display: flex;
         padding: 0.5em;
         gap: 1em;
+        align-items: center;
+        justify-content: space-between;
     }
 
     hr {

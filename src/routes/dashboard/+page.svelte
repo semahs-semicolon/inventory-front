@@ -15,6 +15,7 @@
         children: data.tree
     }
     rootTree = injectParentLink(rootTree)
+    console.log(rootTree)
 </script>
 
 <div class="root">
