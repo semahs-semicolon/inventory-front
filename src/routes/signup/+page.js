@@ -7,6 +7,6 @@ export const csr = true;
 export const prerender = false;
 
 export async function load({ params }) {
-    if (get(ACCESS_TOKEN) != null) throw redirect(301, "/dashboard");
+    if (get(ACCESS_TOKEN) != null) redirect(301, "/dashboard");
     return {};
 }
