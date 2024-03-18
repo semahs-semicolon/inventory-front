@@ -1,5 +1,7 @@
 <script>
 	import { API_URL } from "../../api";
+	import PrimaryButton from "../../components/button/PrimaryButton.svelte";
+	import TextField from "../../components/button/TextField.svelte";
 	import { ACCESS_TOKEN } from "../../stores";
 
     let username = '', password = '', nickname = '';
@@ -30,14 +32,14 @@
 <div class="content">
     <div class="form">
         <h1>SEDA Inventory System</h1>
-        <span>Username</span>
-        <input type="text" placeholder="username" bind:value={username}/>
-        <span>Password</span>
-        <input type="password" placeholder="password" bind:value={password}/>
-        <span>Nickname</span>
-        <input type="text" placeholder="nickname" bind:value={nickname}/>
-        <button on:click={signup}>Sign Up</button>
-        <a href="/signin">Already have an account?</a>
+        <span>사용자 이름</span>
+        <TextField type="text" placeholder="username" bind:value={username}/>
+        <span>비밀번호</span>
+        <TextField type="password" placeholder="password" bind:value={password}/>
+        <span>닉네임</span>
+        <TextField type="text" placeholder="nickname" bind:value={nickname}/>
+        <PrimaryButton on:click={signup}>회원가입</PrimaryButton>
+        <a href="/signin">이미 계정이 있으십니까?</a>
     </div>
 </div>
 

@@ -14,6 +14,7 @@
     export let parentId;
     export let movable = false;
     export let editing = false;
+    export let depth = 2;
 
     let parentWidth, parentHeight;
     let x, y, width, height;
@@ -143,12 +144,14 @@
                 <slot name="background" tree={tree} startDrag={startDrag}>
                 </slot>
             </div>
-            {#each tree.children as child}
-                <svelte:self tree={child} movable={true} parentId={tree.id} on:dimension editing={editing}>
-                    <slot name="background" slot="background" let:tree let:startDrag tree={tree} startDrag={startDrag}/>
-                    <slot name="contextmenu" slot="contextmenu" let:tree tree={tree}/>
-                </svelte:self>
-            {/each}
+            {#if depth > 0}
+                {#each tree.children as child}
+                    <svelte:self tree={child} movable={true} parentId={tree.id} on:dimension editing={editing} depth={depth - 1}>
+                        <slot name="background" slot="background" let:tree let:startDrag tree={tree} startDrag={startDrag}/>
+                        <slot name="contextmenu" slot="contextmenu" let:tree tree={tree}/>
+                    </svelte:self>
+                {/each}
+            {/if}
         </div>
     {#if movable && editing}
         <div class="resize" on:mousedown={startResize}>

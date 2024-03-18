@@ -45,9 +45,7 @@
 			
 		</div>
 	{/if}
-	<slot>
-		<button>aa</button>
-	</slot>
+	<slot/>
 </div>
 
 <style>
@@ -63,6 +61,7 @@
 		display: flex;
 		justify-content: start;
 		width: 100%;
+		height: 100%;
 	}
 	.responsive {
 		display: flex;

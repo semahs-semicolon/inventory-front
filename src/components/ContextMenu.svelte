@@ -28,14 +28,15 @@
     .menu {
         position: fixed;
         display: flex;
-        border-radius: 0.5em;
+        border-radius: 1em;
         border-color: black;
-        background-color: lightgray;
+        background-color: #EFEFEF;
         color: black;
         border-width: 1px;
-        padding: 0.5em;
+        padding: 1em;
         z-index: 999;
         border-style: solid;
+        max-width: 300px;
     }
     .container {
         display: flex;

@@ -6,6 +6,7 @@
 	import { API_URL, authfetch } from "../../api";
 	import TreeView from "../../components/TreeView.svelte";
 	import { goto } from "$app/navigation";
+	import PrimaryButton from "../button/PrimaryButton.svelte";
 
 
     export let rootTree;
@@ -50,7 +51,7 @@
                 x: 0,
                 y: 0,
                 width: 30,
-                height: 5,
+                height: 30,
                 parent: tree.id
             })
         });
@@ -143,20 +144,20 @@
                 <div slot="menu" class="menu" >
                     <span>{tree.name}</span>
                     <hr/>
-                    <button on:click={() => create(tree)}>Create New</button>
-                    <button on:click={() => rename(tree)}>Rename</button>
-                    <button on:click={() => doDelete(tree)}>Delete</button>
+                    <PrimaryButton on:click={() => create(tree)}>새로 위치 만들기</PrimaryButton>
+                    <PrimaryButton on:click={() => rename(tree)}>이름 바꾸기</PrimaryButton>
+                    <PrimaryButton on:click={() => doDelete(tree)}>삭제하기</PrimaryButton>
                     {#if editing}
-                        <button on:click={() => editing = false}>End Move</button>
+                        <PrimaryButton on:click={() => {editing = false;  save();}}>이동 멈추기</PrimaryButton>
                     {:else}
-                        <button on:click={() => editing = true}>Move</button>
+                        <PrimaryButton on:click={() => {editing = true;}}>이동 하기</PrimaryButton>
                     {/if}
                     {#if tree?.id !== undefined}
                         {#if tree?.id == background}
-                            <button on:click={() => {background = undefined; image=undefined;}}>Cancel BG</button>
-                            <button on:click={() => saveLocationBackground(tree, image == undefined || image.length == 0 ? null : image[0])}>Save</button>
+                            <PrimaryButton on:click={() => {background = undefined; image=undefined;}}>배경설정 취소</PrimaryButton>
+                            <PrimaryButton on:click={() => saveLocationBackground(tree, image == undefined || image.length == 0 ? null : image[0])}>배경 저장</PrimaryButton>
                         {:else}
-                            <button on:click={() => {background = tree.id; image=undefined;}}>Background</button>
+                            <PrimaryButton on:click={() => {background = tree.id; image=undefined;}}>배경 설정</PrimaryButton>
                         {/if}
                     {/if}
                 </div>
@@ -164,6 +165,11 @@
                     <div class:hovered={hoveredLocation != null && hoveredLocation?.id == tree?.id}
                     class:selected = {selectedLocation != null && selectedLocation?.id == tree?.id}
                     on:dblclick={() => { if (tree.id != null) goto(`/dashboard/tree/${tree.id}`)}}
+                    on:mouseenter={tree != rootTree && (() => hoveredLocation = tree)}
+                    on:mouseleave={() => hoveredLocation = null}
+                    on:click={() => {if (tree?.id === selectedLocation?.id) {selectedLocation = null;} else if (tree?.id != null) {selectedLocation = tree} else {selectedLocation=null;}}}
+                                
+
                     class="background" on:contextmenu|self={onContextMenu} on:drop={(e) => {
                         if (e.dataTransfer.types.includes("seda/location")) {
                             e.preventDefault();
@@ -230,10 +236,8 @@
                                 class:draggable={editing && tree.id !== null}
                                 class:selected={selectedLocation != null &&selectedLocation?.id == tree?.id}
                                 class:hovered={hoveredLocation != null && hoveredLocation?.id == tree?.id}
-                                on:mouseenter={tree != rootTree && (() => hoveredLocation = tree)}
-                                on:mouseleave={() => hoveredLocation = null}
+                                
                                 on:mousedown={editing && tree != rootTree && startDrag}
-                                on:click={() => {if (tree?.id === selectedLocation?.id) {selectedLocation = null;} else if (tree?.id != null) {selectedLocation = tree} else {selectedLocation=null;}}}
                                 
                                 draggable={!editing} on:dragstart={(e) => {
                                     e.dataTransfer.setData("seda/location", tree.id);
@@ -254,11 +258,6 @@
                 </label>
             </ContextMenu>
     </LocationView>
-    {#if Object.values(currentUpdates).length > 0}
-        <button class="float-view" on:click={() => {
-            save();
-        }}>Save</button>
-    {/if}
 </div>
 
 <style>
@@ -276,8 +275,9 @@
         height: 100%;
     }
 
-.menu {
+    .menu {
         display: flex;
+        gap: 0.5em;
         flex-direction: column;
     }
     .float-view {

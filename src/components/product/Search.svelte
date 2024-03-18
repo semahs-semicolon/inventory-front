@@ -34,7 +34,7 @@
 <div class="products">
     <div class="header">
         <span>카탈로그</span>
-        <TextField placeholder="입력하다 검색어" class="grow" bind:value={search}/>
+        <TextField placeholder="검색" class="grow" bind:value={search}/>
         <slot name="header"/>
     </div>
     <hr/>
@@ -54,9 +54,9 @@
                 </slot>
             {/each}
             <span class="page">
-                <PrimaryButton on:click={() => page--} disabled={page == 0}>이전 페이지</PrimaryButton>
+                <PrimaryButton on:click={() => page--} disabled={page == 0}>이전</PrimaryButton>
                 {page+1} 페이지
-                <PrimaryButton on:click={() => page++} disabled={products.length != size}>다음 페이지</PrimaryButton>
+                <PrimaryButton on:click={() => page++} disabled={products.length != size}>다음</PrimaryButton>
             </span>
         {/await}
     </div>

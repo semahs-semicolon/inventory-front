@@ -1,6 +1,7 @@
 
 <script>
 	import { onNavigate } from '$app/navigation';
+    import { ProgressBar } from "@prgm/sveltekit-progress-bar";
 
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
@@ -18,8 +19,9 @@
     <a class="header-title" href="/dashboard">과학실 물품관리 시스템</a>
     <a href="/dashboard/products">물품 검색</a>
 </div>
+<ProgressBar color="#FFFF00" zIndex={100} />
 <div class="container">
-<slot/>
+    <slot/>
 </div>
 
 <style>
@@ -28,6 +30,7 @@
         height: 3em;
         align-items: center;
         padding: 0.5em;
+        padding-left: 1em;
         gap: 1em;
     }
     .header-title {
@@ -41,7 +44,8 @@
     .container {
         display: flex;
         width: 100%;
-        flex: 1;
+        flex: 1 0 auto;
+        height: 0;
         background-color: rgb(229, 229, 229);
     }
     .header {

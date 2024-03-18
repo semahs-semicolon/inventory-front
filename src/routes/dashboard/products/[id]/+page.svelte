@@ -3,6 +3,8 @@
 	import { API_URL, authfetch, imageIdToUrl } from '../../../../api.js';
 	import LocationView from '../../../../components/location/LocationView.svelte';
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
+	import PrimaryButton from '../../../../components/button/PrimaryButton.svelte';
+	import { goto } from '$app/navigation';
 
     const open = getContext('menu-context');
 
@@ -23,11 +25,20 @@
         x: 0,
         y: 0,
         width: 100,
-        height: Math.max(...data.tree.map(a => a.y + a.height), 11),
+        height: Math.max(...data.tree.map(a => a.y + a.height), 100),
         name: "인벤토리 시스템",
         children: data.tree
     }
     tree = injectParentLink(tree);
+
+    $: {
+        selectedItem = undefined; data.product.id;
+    }
+
+    let visibleTree = tree;
+    let route = [];
+    let routeIds = [];
+    let location = 0;
 
     const getSpecificLocation = (id) => {
         let theelement = searchId(tree, id);
@@ -38,12 +49,51 @@
         }
         return path.join(" > ")
     }
+
+    const setupTreeView = () => {
+        let theelement = searchId(tree, selectedItem.locationId);
+
+        route = [];
+        routeIds = [];
+        while (theelement?.id != undefined) {
+            route = [theelement, ...route];
+            routeIds = [theelement.id, ...routeIds];
+            theelement = theelement.parent;
+        }
+        route = [theelement, ...route];
+
+        location = route.length - 2;
+        setupViewOfParent(route[location]);
+    }
+
+    const enterLayer = () => {
+        if (location >= route.length - 1) return;
+        setupViewOfParent(route[++location]);
+    }
+    const exitLayer = () => {
+        if (location < 1) return;
+        setupViewOfParent(route[--location]);
+    }
+    const setupViewOfParent = (parentItem) => {
+        visibleTree = {
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+            name: parentItem.name,
+            children: parentItem.children,
+            parent: parentItem.parent,
+            id: parentItem.id,
+            original: parentItem
+        }
+    }
     
     let selectedItem, hoveredItem;
+    let innerHeight, innerWidth;
 </script>
+<svelte:window bind:innerWidth bind:innerHeight />
 
 <div class="body">
-    <slot/>
     <div class="content">
         <div class="header">
             {#if $open.should}
@@ -61,33 +111,37 @@
             <div class="right">
                 <div class="content-header">
                     <h1>{data.product.name}</h1>
-                    <a href={`/dashboard/products/${data.product.id}/edit`}>Edit</a>
-                    <button on:click={deleteProduct} disabled={data.items.length !== 0}>Delete</button>
+                    <PrimaryButton on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)}>수정하기</PrimaryButton>
+                    <PrimaryButton on:click={deleteProduct} disabled={data.items.length !== 0}>삭제</PrimaryButton>
                 </div>
                 <p>{data.product.description}</p>
             </div>
         </div>
         <hr/>
         <div class="real-content2">
-            <h1>Stored in...</h1>
-            {#each data.items as item}
-                <span class="item" on:click={() => selectedItem=item}
-                    on:mouseenter={() => hoveredItem=item}
-                    on:mouseleave={() => hoveredItem=null}>
-                    <span>{item.count}x</span><a href={`/dashboard/tree/${item.locationId}`}>{getSpecificLocation(item.locationId)}</a>
-                </span>
-            {:else}
-                <h3>Welp ain't anywhere</h3>
-            {/each}
+            <h1>저장 위치</h1>
+            <div class="storage-list">
+                {#each data.items as item}
+                    <span class="item" 
+                        class:item-selected = {selectedItem == item}
+                        on:click={() => {if (selectedItem != item) {selectedItem=item; setupTreeView();} else {selectedItem = undefined }}}
+                        on:mouseenter={() => hoveredItem=item}
+                        on:mouseleave={() => hoveredItem=null}>
+                        <span>{item.count}x</span><span>{getSpecificLocation(item.locationId)}</span>
+                    </span>
+                {:else}
+                    <h3>Welp ain't anywhere</h3>
+                {/each}
+            </div>
         </div>
     </div>
     {#if selectedItem !== undefined}
         <div class="relative">
-            <LocationView tree={tree} movable={false} parentId={null} editing={false}>
+            <LocationView tree={visibleTree} movable={false} parentId={null} editing={false}>
                 <slot slot="background" let:tree>
                     <div class:hovered={hoveredItem != null && hoveredItem?.locationId == tree?.id}
                     class:selected = {selectedItem != null && selectedItem?.locationId == tree?.id}
-                    class="background">
+                    class="background" class:onroute = {routeIds.includes(tree.id)}>
                 
                         <div class="title"
                             class:hovered={hoveredItem != undefined && hoveredItem?.locationId == tree?.id}
@@ -103,19 +157,51 @@
                     </div>
                 </slot>
             </LocationView>
+            <div class="controls">
+                <div class="controls-top">
+                    {#if innerWidth < 700}
+                        <PrimaryButton on:click={() => selectedItem=undefined}>창 종료</PrimaryButton>
+                    {/if}
+                    <PrimaryButton on:click={() => goto(`/dashboard/tree/${routeIds[location]}`)}>메인에서 열기</PrimaryButton>
+                    <PrimaryButton on:click={() => enterLayer()}>들어가기</PrimaryButton>
+                    <PrimaryButton on:click={() => exitLayer()}>나가기</PrimaryButton>
+                </div>
+                <span class="route">
+                    {#each route as segment}
+                        <span class="segment" class:segment-selected={segment.id == visibleTree.id}>{segment.name}</span> 
+                        {#if segment !== route[route.length-1]} &gt; {/if}
+                    {/each}
+                </span>
+            </div>
         </div>
     {/if}
 </div>
 
 <style>
+    .storage-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        background-color: #EFEFEF;
+        padding: 0.5em;
+        border-radius: 0.5em;
+    }
     .content-header {
         display: flex;
+        flex-wrap: wrap;
         flex-direction: row;
         align-items: baseline;
         gap: 1em;
     }
     .image {
-        width: 10em;
+        width: 20em;
+        display: flex;
+        /* flex: 1; */
+    }
+    @media(max-width: 40em) {
+        .image {
+            width: 100%;
+        }
     }
     .right {
         display: flex;
@@ -136,10 +222,16 @@
         padding: 0.5em;
     }
     .hovered {
-        background-color: coral !important;
+        background-color: #b2ce7970;
     }
     .selected {
-        background-color: darkcyan !important;
+        background-color: #4d9de770 !important;
+    }
+    .onroute {
+        background-color: #5a83251A;
+    }
+    .segment-selected { 
+        background-color: #4d9de770 !important;
     }
     .title > span {
         -webkit-touch-callout: none;
@@ -153,27 +245,70 @@
         display: flex;
         padding: 0.5em;
         cursor: pointer;
-        background-color: lightcyan;
+        background-color: white;
+        border-radius: 0.5em;
     }
     .item:hover {
-        background-color: coral;
+        background-color: #4d9de714;
+    }
+    .item:active {
+        background-color: #4d9de71A;
+    }
+    .item-selected {
+        background-color: #4d9de71A;
     }
     .body {
         display: flex;
         flex-direction: row;
-        flex: 1;
         justify-content: stretch;
         align-items: stretch;
         background-color: white;
+        position: relative;
+        height: 100%;
+    }
+    .controls {
+        position: absolute;
+        display: flex;
+        right: 0;
+        bottom: 0;
+        flex-direction: column;
+        align-items: end;
+        z-index: 20;
+        width: 100%;
+    }
+    .controls-top {
+        display: flex;
+        flex-direction: row;
+        padding: 1em;
+        gap: 1em;
+    }
+    .route {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: 100%;
+        gap: 0.5em;
+        background-color: #7777771A;
+        padding: 0.5em;
+    }
+    .segment {
+        text-wrap: wrap;
+        word-break: break-all;
+        overflow-wrap: break-word;
+        background-color: white;
+        padding: 0.5em;
+        border-radius: 0.5em;
     }
     .content {
         display: flex;
         flex-direction: column;
         flex-basis: 2;
-        flex: 1;
         border-color: black;
         border-width: 1px;
         border-style: solid;
+        flex: 1;
+        height: 100%;
+        overflow-y: scroll;
     }
     .header {
         display: flex;
@@ -183,6 +318,7 @@
     }
     .real-content {
         display: flex;
+        flex-wrap: wrap;
         flex-direction: row;
         padding: 1em;
         gap: 1em;
@@ -214,7 +350,19 @@
     .relative {
         position: relative;
         flex: 1;
+        max-width: 700px;
         overflow: auto;
     }
 
+    @media(max-width: 700px) {
+        .relative {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background-color: white;
+        }
+    }
 </style>

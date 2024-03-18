@@ -1,5 +1,6 @@
 <script>
     import TreeElement from "./TreeElement.svelte";
+	import PrimaryButton from "./button/PrimaryButton.svelte";
 
     export let tree;
     export let interact;

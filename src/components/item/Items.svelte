@@ -107,11 +107,11 @@
                             {:else}
                             <img class="image" src={imageIdToUrl(item.product.primaryImage)}/>
                             {/if}
-                            <a href={`/dashboard/products/${item.product.id}`}>{item.product.name}</a> 
+                            <a href={`/dashboard/products/${item.product.id}`} on:click|stopPropagation>{item.product.name}</a> 
                         </span>
                     </slot>
                 {:else}
-                    <h3>Welp empty</h3>
+                    <span class="howto">카탈로그에서 품목을 더블클릭하거나 드래그해서 물품을 추가하세요</span>
                 {/each}
             {/await}
         </div>
@@ -119,6 +119,9 @@
 {/if}
 
 <style>
+    .howto {
+        color: gray;
+    }
     .item {
         display: flex;
         flex-direction: row;

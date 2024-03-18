@@ -11,6 +11,7 @@
 	import SecondaryButton from "../button/SecondaryButton.svelte";
 	import CloseButton from "../button/CloseButton.svelte";
 	import { goto } from "$app/navigation";
+	import PrimaryButton from "../button/PrimaryButton.svelte";
     
     export let rootTree;
     export let fullTree;
@@ -34,7 +35,9 @@
             <TreeView tree={fullTree} interact={true}>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div slot="title" class="tree-title-container">
-                    <span class="tree-title">위치 나무</span>
+                    <span class="tree-title">위치 나무
+                        <PrimaryButton on:click={() => goto("/dashboard")}>루트로</PrimaryButton>
+                    </span>
                     {#if treeShow}
                         <CloseButton on:click={() => treeShow=false}/>
                     {/if}
@@ -44,7 +47,7 @@
                     class:selected={selectedLocation?.id == element?.id}
                     on:mouseenter={() => hoveredLocation = element}
                     on:mouseleave={() => hoveredLocation = null}
-                    class="tree-element" on:click={(e) => {goto(`/dashboard/tree/${element.id}`); treeShow=false;}}>
+                    class="tree-element" on:click={() => {goto(`/dashboard/tree/${element.id}`); treeShow=false;}}>
                     {element?.name}
                 </span>
             </TreeView>

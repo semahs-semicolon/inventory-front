@@ -1,5 +1,9 @@
 <script>
-	import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
+	import { goto } from "$app/navigation";
+import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
+	import PrimaryButton from "../../../../../components/button/PrimaryButton.svelte";
+	import TextArea from "../../../../../components/button/TextArea.svelte";
+	import TextField from "../../../../../components/button/TextField.svelte";
 
 
     export let data;
@@ -46,8 +50,8 @@
 <div class="body">
     <div class="content">
         <div class="header">
-            <span>Edit product!</span>&nbsp;
-            <a href="javascript:history.back()">Go back</a>
+            <PrimaryButton on:click={() => history.back()}>돌아가기</PrimaryButton>
+            <span>물품 수정</span>
         </div>
         <hr/>
         <div class="real-content">
@@ -63,15 +67,15 @@
                     <input id="file-input" type="file" accept="image/jpeg,image/png,image/gif,image/jpg,image/webp" hidden bind:files={file}/>
                 </div>
                 <div class="name">
-                    <span>Product name</span>
-                    <input type="text" placeholder="Type product name" bind:value={productName}>
+                    <span>물품 이름</span>
+                    <TextField type="text" placeholder="Type product name" bind:value={productName}/>
                 </div>
-            </div>
-            <h3>Product Desc</h3>
+            </div><br/>
+            <span>물품 설명</span>
             
-            <textarea bind:value={productDesc}/>
+            <TextArea bind:value={productDesc}/>
             <br/>
-            <button on:click={create}>SAVE!</button>
+            <PrimaryButton on:click={create}>저장!</PrimaryButton>
         </div>
     </div>
 </div>
@@ -110,6 +114,7 @@
         flex: 1;
         justify-content: stretch;
         align-items: stretch;
+        background-color: white;
     }
     .content {
         display: flex;
@@ -123,6 +128,8 @@
     .header {
         display: flex;
         padding: 0.5em;
+        align-items: center;
+        gap: 0.5em;
     }
     .real-content {
         display: flex;

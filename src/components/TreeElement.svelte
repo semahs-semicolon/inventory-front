@@ -4,20 +4,18 @@
 
     export let element;
 
-    let shrunk = false;
+    let shrunk = element.children.length <= 0;
 
     export let interact = false;
 </script>
 
 <div class="tree-element">
     <div class="tree-header">
-        {#if element.children.length > 0}
-            <button on:click={() => shrunk = !shrunk}>
-                <span class="material-symbols-outlined animate" class:rotate={shrunk}>
-                    expand_more
-                </span>
-            </button>
-        {/if}
+        <button on:click={() => shrunk = !shrunk ||  element.children.length <= 0}>
+            <span class="material-symbols-outlined animate" class:rotate={shrunk}>
+                { element.children.length >= 1 ? "expand_more" : "fiber_manual_record" }
+            </span>
+        </button>
         <slot name="element" element={element}>
             <span>{element.name}</span>
         </slot>
