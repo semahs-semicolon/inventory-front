@@ -107,19 +107,21 @@
         </div>
         <hr/>
         <div class="real-content">
-            <img class="image" src={imageIdToUrl(data.product.primaryImage)}/>
-            <div class="right">
+            <img class="image" src={imageIdToUrl(data.product.primaryImage,  `${window.devicePixelRatio*500},fit,jpeg`)}/>
+            <div class="right"> 
                 <div class="content-header">
                     <h1>{data.product.name}</h1>
                     <PrimaryButton on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)}>수정하기</PrimaryButton>
                     <PrimaryButton on:click={deleteProduct} disabled={data.items.length !== 0}>삭제</PrimaryButton>
                 </div>
                 <p>{data.product.description}</p>
+
             </div>
         </div>
         <hr/>
         <div class="real-content2">
             <h1>저장 위치</h1>
+            <p>총 {data.items.map(a => a.count).reduce((partialSum, a) => partialSum + a, 0)}개가 {data.items.length}곳에 저장되어 있습니다</p>
             <div class="storage-list">
                 {#each data.items as item}
                     <span class="item" 
@@ -130,7 +132,7 @@
                         <span>{item.count}x</span><span>{getSpecificLocation(item.locationId)}</span>
                     </span>
                 {:else}
-                    <h3>Welp ain't anywhere</h3>
+                    <h3>물품이 저장된 곳이 없네요</h3>
                 {/each}
             </div>
         </div>

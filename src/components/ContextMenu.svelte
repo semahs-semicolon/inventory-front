@@ -1,30 +1,44 @@
 <script>
-    let x, y, show = false;
+	import { getContext } from "svelte";
+
+    let popup = getContext('popup')
+
+    let x, y;
 
     const contextMenu = (ev) => {
         ev.preventDefault();
-        show = true;
         x = ev.pageX;
         y = ev.pageY;
         console.log(ev);
+
+        $popup = {
+            x: x,
+            y: y,
+            htmlDomElem: menuEl
+        };
     }
     const exit = (ev) => {
-        show = false;
+        $popup = undefined;
     }
+
+    let menuEl;
 </script>
 <svelte:window on:click={exit}/>
 
-<div on:contextmenu={contextMenu} class="container">
-    {#if show}
-        <div class="menu" style:left={`${x}px`} style:top={`${y}px`}>
-            <slot name="menu"/>
-        </div>
-    {/if}
+<div class="invisible">
+    <div class="um" bind:this={menuEl}>
+        <slot name="menu"/>
+    </div>
+</div>
+
+<div class="container" on:contextmenu={contextMenu}>
     <slot onContextMenu={contextMenu}></slot>
 </div>
 
 <style>
-
+    .invisible {
+        display: none;
+    }
     .menu {
         position: fixed;
         display: flex;

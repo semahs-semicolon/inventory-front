@@ -13,7 +13,7 @@
 }} class:selected={selected} on:click on:dblclick>
     <div class="image">
         {#if product.primaryImage != undefined}
-            <img src={imageIdToUrl(product.primaryImage)}/>
+            <img src={imageIdToUrl(product.primaryImage,  `${window.devicePixelRatio*32},fit,jpeg`)}/>
         {:else}
             <div class="box">
                 X

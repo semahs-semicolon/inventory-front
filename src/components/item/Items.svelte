@@ -15,7 +15,7 @@
 
     const changeCount = async (id) => {
         const theItem = (await items).find(a => a.product.id == id) ?? {count: 0};
-        let count = parseInt(prompt("count? (Previously "+theItem.count+")"   ));
+        let count = parseInt(prompt("추가할 개수를 입력하세요 (현재 개수: "+theItem.count+")"   ));
         if (count == 0 || isNaN(count) || count == undefined) return;
         count += theItem.count;
 
@@ -105,7 +105,7 @@
                                 X
                             </div>
                             {:else}
-                            <img class="image" src={imageIdToUrl(item.product.primaryImage)}/>
+                            <img class="image" src={imageIdToUrl(item.product.primaryImage, `${window.devicePixelRatio*24},fit,jpeg`)}/>
                             {/if}
                             <a href={`/dashboard/products/${item.product.id}`} on:click|stopPropagation>{item.product.name}</a> 
                         </span>

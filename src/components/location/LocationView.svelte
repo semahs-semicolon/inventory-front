@@ -45,7 +45,10 @@
 	function startDrag(e) {
         if (!movable) return;
         if (!editing) return;
-
+        if (e.touches) {
+            e.pageX = e.touches[0].pageX;
+            e.pageY = e.touches[0].pageY;
+        }
 
 		dragStatus.moving = true;
         dragStatus.sx = e.pageX;
@@ -56,6 +59,10 @@
     function startResize(e) {
         if (!movable) return;
         if (!editing) return;
+        if (e.touches) {
+            e.pageX = e.touches[0].pageX;
+            e.pageY = e.touches[0].pageY;
+        }
 
         resizeStatus.resizing = true;
         resizeStatus.sx = e.pageX;
@@ -66,8 +73,15 @@
     }
 	
 	function keepDrag(e) {
+        if (e.touches) {
+            e.pageX = e.touches[0].pageX;
+            e.pageY = e.touches[0].pageY;
+        }
 		if (dragStatus.moving) {
-			let intermediateX = dragStatus.sleft + e.pageX - dragStatus.sx;
+
+
+
+            let intermediateX = dragStatus.sleft + e.pageX - dragStatus.sx;
 			let intermediateY = dragStatus.stop + e.pageY - dragStatus.sy;
             
             tree.x = Math.floor(intermediateX * gridWidth / parentWidth);
@@ -129,14 +143,14 @@
     }
 </script>
 
-<svelte:window  on:mouseup={endDrag} on:mousemove={keepDrag}
+<svelte:window  on:mouseup={endDrag} on:mousemove={keepDrag} on:touchmove={keepDrag}  on:touchend={endDrag}
     on:keydown={keydown} on:keyup={keyup}/>
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div bind:clientWidth={parentWidth} bind:clientHeight={parentHeight} class="heightgetter"/>
 <div class="positioner" style:top={`${y * 100 / gridHeight}%`} style:left={`${x * 100 / gridWidth}%`} style:width={`${width *100/gridWidth}%`} style:height={`${height * 100 / gridHeight}%`}>
         {#if tree.backgroundId != undefined}
             <div class="background2">
-                <img src={imageIdToUrl(tree.backgroundId)} alt="background of {tree?.name}"/>
+                <img src={imageIdToUrl(tree.backgroundId, `${window.devicePixelRatio*Math.max(width /gridWidth * parentWidth, height  / gridHeight * parentHeight)},fit,jpeg`)} alt="background of {tree?.name}"/>
             </div>
         {/if}
         <div class="container">

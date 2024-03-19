@@ -4,7 +4,6 @@
 	import TreeView from "../TreeView.svelte";
 	import Products from "../product/Products.svelte";
 	import Items from "../item/Items.svelte";
-	import ContextMenu from "../ContextMenu.svelte";
 	import EditableGenericLocationView from "./EditableGenericLocationView.svelte";
 	import Product from "../product/Product.svelte";
 	import { fly } from "svelte/transition";
@@ -12,6 +11,7 @@
 	import CloseButton from "../button/CloseButton.svelte";
 	import { goto } from "$app/navigation";
 	import PrimaryButton from "../button/PrimaryButton.svelte";
+	import ContextMenu from "../ContextMenu.svelte";
     
     export let rootTree;
     export let fullTree;
@@ -24,6 +24,62 @@
 
     let innerWidth = 10000;
     let innerHeight = 10000;
+
+
+    const create = async (tree) => {
+        const name = prompt("name?");
+        const res = await authfetch(`${API_URL()}/locations`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                x: 0,
+                y: 0,
+                width: 30,
+                height: 30,
+                parent: tree.id
+            })
+        });
+        const json = await res.json();
+        tree.children = [...tree.children, {...json, children: [], parent: tree}];
+
+        fullTree = fullTree;
+        rootTree = rootTree;
+    }
+    const rename = async (tree) => {
+        const name = prompt("name?");
+        if (name == null) return;
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}/name`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name
+            })
+        });
+        const json = await res.json();
+        tree.name = name;
+
+        fullTree = fullTree;
+        rootTree = rootTree;
+    }
+
+    const doDelete = async (tree) => {
+        if (!confirm("you sure?")) return;
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}`, {
+            method: "DELETE"
+        });
+        if (res.status !== 200)
+            alert(await res.text());
+        else
+            tree.parent.children = tree.parent.children.filter(elem => elem.id !== tree.id);
+
+        fullTree = fullTree;
+        rootTree = rootTree;
+    }
 </script>
 
 
@@ -42,14 +98,23 @@
                         <CloseButton on:click={() => treeShow=false}/>
                     {/if}
                 </div>
-                <span slot="element"  let:element 
-                    class:hovered={hoveredLocation?.id == element?.id}
-                    class:selected={selectedLocation?.id == element?.id}
-                    on:mouseenter={() => hoveredLocation = element}
-                    on:mouseleave={() => hoveredLocation = null}
-                    class="tree-element" on:click={() => {goto(`/dashboard/tree/${element.id}`); treeShow=false;}}>
-                    {element?.name}
-                </span>
+                <ContextMenu slot="element" let:element>
+                    <div slot="menu" class="menu" >
+                        <span>{element?.name}</span>
+                        <hr/>
+                        <PrimaryButton on:click={() => create(element)}>새로 위치 만들기</PrimaryButton>
+                        <PrimaryButton on:click={() => rename(element)}>이름 바꾸기</PrimaryButton>
+                        <PrimaryButton on:click={() => doDelete(element)}>삭제하기</PrimaryButton>
+                    </div>
+                    <span 
+                        class:hovered={hoveredLocation?.id == element?.id}
+                        class:selected={selectedLocation?.id == element?.id}
+                        on:mouseenter={() => hoveredLocation = element}
+                        on:mouseleave={() => hoveredLocation = null}
+                        class="tree-element" on:click={() => {goto(`/dashboard/tree/${element.id}`); treeShow=false;}}>
+                        {element?.name}
+                    </span>
+                </ContextMenu>
             </TreeView>
         </div>
     {/if}
@@ -85,6 +150,12 @@
 </div>
 
 <style>
+
+.menu {
+        display: flex;
+        gap: 0.5em;
+        flex-direction: column;
+    }
     .darkbg {
         z-index: 30;
         background-color: #322F37;

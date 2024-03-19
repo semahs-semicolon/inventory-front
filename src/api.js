@@ -1,8 +1,8 @@
 import { get }from 'svelte/store';
 import { ACCESS_TOKEN } from "./stores";
 
-// export const API_URL = () => `https://${location.hostname}/api`
-export const API_URL = () => "http://127.0.0.1:8080"
+export const API_URL = () => `https://${location.hostname}/api`
+// export const API_URL = () => "http://127.0.0.1:8080"
 // export const API_URL = "http://192.168.219.100/panel/api"
 
 export function authfetch(input, init={method: 'GET', headers: {}}) {
@@ -27,7 +27,7 @@ export function authfetch(input, init={method: 'GET', headers: {}}) {
 //     return false;
 // }
 
-export function imageIdToUrl(id) {
-    // return `https://${location.hostname}/s3/images/${id}`;
-    return `https://s4.cloud.seda.club/swift/v1/AUTH_7913d9d4f87343c28de59cf00a57ef44/images/${id}`
+export function imageIdToUrl(id, options = "200,fit,jpeg") {
+    return `https://${location.hostname}/scaled/${options}/images/${id}`;
+    // return `https://s4.cloud.seda.club/swift/v1/AUTH_7913d9d4f87343c28de59cf00a57ef44/images/${id}`
 }

@@ -38,12 +38,12 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
     }
 
     let file;
-    let src = imageIdToUrl(imageId);
+    let src = imageIdToUrl(imageId, `${window.devicePixelRatio*500},fit,jpeg`);
     $: {
         if (file != undefined) {
             src = URL.createObjectURL(file[0]);
         } else
-            src = imageIdToUrl(imageId);
+            src = imageIdToUrl(imageId, `${window.devicePixelRatio*500},fit,jpeg`);
     }
 </script>
 
@@ -64,16 +64,16 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
                             <img src={src} alt="uploaded"/>
                         {/if}
                     </label>
-                    <input id="file-input" type="file" accept="image/jpeg,image/png,image/gif,image/jpg,image/webp" hidden bind:files={file}/>
+                    <input id="file-input" type="file" capture="environment" accept="image/jpeg,image/png,image/gif,image/jpg,image/webp" hidden bind:files={file}/>
                 </div>
                 <div class="name">
                     <span>물품 이름</span>
                     <TextField type="text" placeholder="Type product name" bind:value={productName}/>
                 </div>
             </div><br/>
-            <span>물품 설명</span>
+            <span>물품 설명</span> <br/>
             
-            <TextArea bind:value={productDesc}/>
+            <TextArea bind:value={productDesc} rows=20/>
             <br/>
             <PrimaryButton on:click={create}>저장!</PrimaryButton>
         </div>

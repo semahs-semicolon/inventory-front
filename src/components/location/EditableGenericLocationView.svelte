@@ -63,6 +63,7 @@
     }
     const rename = async (tree) => {
         const name = prompt("name?");
+        if (name == null) return;
         const res = await authfetch(`${API_URL()}/locations/${tree.id}/name`, {
             method: "PUT",
             headers: {
@@ -178,7 +179,7 @@
                             
                             const theElement = searchId(rootTree, dataStr);
                             if (findsParent(tree, theElement.id)) {
-                                alert("I'm not letting you put parent into child")   
+                                alert("위치 사이클을 형성할 수 없습니다")   
                                 return;
                             }
                             console.log(theElement);
@@ -201,7 +202,7 @@
                             const dataStr = e.dataTransfer.getData("seda/product");
                             if (dataStr == undefined) return;
                             const data = JSON.parse(dataStr);
-                            const count = parseInt(prompt("count?"));
+                            const count = parseInt(prompt("추가할 개수를 입력하세요"));
                             
                             authfetch(`${API_URL()}/items`, {
                                 method: "POST",
@@ -238,6 +239,7 @@
                                 class:hovered={hoveredLocation != null && hoveredLocation?.id == tree?.id}
                                 
                                 on:mousedown={editing && tree != rootTree && startDrag}
+                                on:touchstart={editing && tree != rootTree && startDrag}
                                 
                                 draggable={!editing} on:dragstart={(e) => {
                                     e.dataTransfer.setData("seda/location", tree.id);

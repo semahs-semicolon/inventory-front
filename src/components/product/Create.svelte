@@ -4,39 +4,72 @@
 	import PrimaryButton from "../button/PrimaryButton.svelte";
 	import TextField from "../button/TextField.svelte";
 	import TextArea from "../button/TextArea.svelte";
+	import { ACCESS_TOKEN } from "../../stores";
+	import { get } from "svelte/store";
 
     const dispatch = createEventDispatcher();
 
     export let productName = "";
     export let productDesc = "";
 
-    const create = async () => {
-        const formData = new FormData();
-        formData.append("image", file[0]);
-        const req1 = await authfetch(`${API_URL()}/images`, {
-            method: 'POST',
-            body: formData
-        });
-        const fileData = await req1.json();
 
-        const res = await authfetch(`${API_URL()}/products`, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name: productName, description: productDesc, imageId: fileData.id, parentCategoryId: null
-            })
-        });
-        const json = await res.json();
-        dispatch("productCreation", json);
+    let fileupload;
+
+    const create = async () => {
+        madeReq = true;
+        try {
+            const fileData = await fileupload;
+
+            const res = await authfetch(`${API_URL()}/products`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: productName, description: productDesc, imageId: fileData.id, parentCategoryId: null
+                })
+            });
+            const json = await res.json();
+            madeReq = false;
+            dispatch("productCreation", json);
+        } catch (e) {
+            madeReq = false;
+        }
     }
 
     let file;
     let src = null;
+    let madeReq = false;
+    let progress = undefined;
     $: {
         if (file != undefined) {
             src = URL.createObjectURL(file[0]);
+
+
+            console.log(file);
+            fileupload = new Promise((resolve, err) => {
+                const formData = new FormData();
+                formData.append("image", file[0]);
+
+                let token = get(ACCESS_TOKEN);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", `${API_URL()}/images`, true);
+                xhr.setRequestHeader("Authorization", "Bearer "+token)
+                xhr.upload.onprogress = function(e) {
+                    var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                    progress = percentComplete;
+                };
+
+                xhr.onerror = function(e) {
+                    progress = undefined;
+                    // err(e.)
+                }
+                xhr.onload = function(e) {
+                    progress = undefined;
+                    resolve(JSON.parse(xhr.responseText));
+                }
+                xhr.send(formData);
+            });
         } else
             src = null;
     }
@@ -49,6 +82,10 @@
     </div>
     <hr/>
     <div class="content">
+        {#if progress != undefined}
+            <span class="progress">사진 업로딩중... {progress}%</span>
+            <progress value={progress} max="100"/>
+        {/if}
         <div class="product_header">
             <div class="image">
                 <label for="file-input">
@@ -70,12 +107,23 @@
 
         <TextArea bind:value={productDesc} rows="5" placeholder="간략한 물품 설명"/>
 
-        <PrimaryButton on:click={create} disabled={productName == "" || file == null}>물품을 카탈로그에 추가하기</PrimaryButton>
+        <PrimaryButton on:click={create} disabled={productName == "" || file == null || madeReq} >물품을 카탈로그에 추가하기</PrimaryButton>
 
     </div>
 </div>
 
 <style>
+    .progress {
+        text-align: center;
+        align-self: stretch;
+        width: 100%;
+    }
+    progress {
+        display: flex;
+        width: 100%;
+        border-radius: 0;
+        height: 10px;
+    }
     .product_header {
         display: flex;
         flex-direction: row;

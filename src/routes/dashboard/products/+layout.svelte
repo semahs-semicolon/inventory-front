@@ -9,6 +9,7 @@
 	import CloseButton from "../../../components/button/CloseButton.svelte";
 	import { fly } from "svelte/transition";
 	import Search from "../../../components/product/Search.svelte";
+	import PrimaryButton from "../../../components/button/PrimaryButton.svelte";
 
 	const open = writable({should: false, open: false});
 	let innerWidth = 10000;
@@ -42,7 +43,6 @@
 					{/if}
 				</div>
 			</Search>
-			
 		</div>
 	{/if}
 	<slot/>
