@@ -234,6 +234,7 @@
         justify-content: center;
         flex: 1;
         position: relative;
+        height: 100%;
 
         box-shadow: 5px 0 5px black, -5px 0 5px black;
     }

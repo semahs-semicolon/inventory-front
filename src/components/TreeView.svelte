@@ -26,6 +26,7 @@
         flex-direction: column;
         align-items: start;
         flex: 1;
+        height: 100%;
         background-color: rgb(246, 242, 249);
     }
     .tree-contents {

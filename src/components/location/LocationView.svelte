@@ -168,7 +168,7 @@
             {/if}
         </div>
     {#if movable && editing}
-        <div class="resize" on:mousedown={startResize}>
+        <div class="resize" on:mousedown={startResize} on:touchstart={startResize}>
             
         </div>
     {/if}
@@ -213,7 +213,7 @@
         border-color: black;
         border-width: 3px;
         border-radius: 3px;
-        background-color: #FFFFFFBB;
+        background-color: #FFFFFF66;
         border-style: solid;
         position: absolute;
         display: flex;
