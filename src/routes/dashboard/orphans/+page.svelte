@@ -18,7 +18,10 @@
 
 
 <div class="um">
-    <PrimaryButton on:click={download}>카탈로그 및 개수를 엑셀 파일로 다운로드</PrimaryButton>
+    이 페이지에 있는 것들은 카탈로그에 등록이 되어있지만
+    어느 위치와도 연관되어있지 않은 물품들입니다.
+
+    
 </div>
 
 

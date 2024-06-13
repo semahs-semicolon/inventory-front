@@ -23,7 +23,7 @@
 
 <div class="products">
     <div class="header">
-        <span>카탈로그에 있지만 보관된 장소가 없는 물품</span>
+        <span>물품 목록</span>
         <slot name="header"/>
     </div>
     <hr/>
