@@ -3,6 +3,7 @@
     import { LAST_SEARCH_RESULT} from '../../stores';
 	import PrimaryButton from "../button/PrimaryButton.svelte";
 	import TextField from "../button/TextField.svelte";
+    import InfiniteScroll from "svelte-infinite-scroll";
 
 
     export let search = '';
@@ -17,17 +18,29 @@
 
     let lastURL = `${API_URL()}/products?search=${encodeURIComponent(search)}`;
     let page = 0;
-    let size = 10;
-    let elements;
+    let size = 20;
+    let elements =  authfetch(`${lastURL}&size=${size}&page=${page}`).then(a => a.json());
 
     const doSearch = (search) => {
         lastURL = `${API_URL()}/products?search=${encodeURIComponent(search)}`;
         page = 0;
+        elements = authfetch(`${lastURL}&size=${size}&page=${page}`).then(a => a.json())
+        .then(res => {$LAST_SEARCH_RESULT = res; return $LAST_SEARCH_RESULT; });
+
     }
-    $: {
+    // $: {
+    //     if (file == undefined) {
+    //         elements = authfetch(`${lastURL}&size=${size}&page=${page}`).then(a => a.json());
+    //         elements.then(res => {$LAST_SEARCH_RESULT = res})
+    //     }
+    // }
+
+    const loadMore = () => {
+        
         if (file == undefined) {
-            elements = authfetch(`${lastURL}&size=${size}&page=${page}`).then(a => a.json());
-            elements.then(res => {$LAST_SEARCH_RESULT = res})
+            page += 1;
+            elements = authfetch(`${lastURL}&size=${size}&page=${page}`).then(a => a.json())
+            .then(res => {$LAST_SEARCH_RESULT = [...$LAST_SEARCH_RESULT, ...res]; return $LAST_SEARCH_RESULT})
         }
     }
 
@@ -111,11 +124,12 @@
                     <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
                 </slot>
             {/each}
+            <InfiniteScroll threshold={10} on:loadMore={loadMore}/>
             {#if file === undefined}
                 <span class="page">
-                    <PrimaryButton on:click={() => page--} disabled={page == 0}>이전</PrimaryButton>
-                    {page+1} 페이지
-                    <PrimaryButton on:click={() => page++} disabled={products.length != size}>다음</PrimaryButton>
+                    <!-- <PrimaryButton on:click={() => page--} disabled={page == 0}>이전</PrimaryButton>
+                    {page+1} 페이지 -->
+                    <!-- <PrimaryButton on:click={() => page++} disabled={products.length != size}>다음</PrimaryButton> -->
                 </span>
             {/if}
         {/await}
