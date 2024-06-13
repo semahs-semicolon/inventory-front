@@ -70,7 +70,8 @@
 	}
 	.responsive {
 		display: flex;
-		max-width: 500px;
+		max-width: 350px;
+		flex: 1;
 		z-index: 40;
 		background-color: white;
 	}
@@ -80,6 +81,7 @@
 			align-items: stretch;
 			justify-content: stretch;
 			width: 100%;
+			max-width: 100%;
 			position: absolute;
 			height: 100%;
 		}
