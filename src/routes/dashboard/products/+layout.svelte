@@ -1,7 +1,7 @@
 <script>
 	import Product from "../../../components/product/Product.svelte";
 	import Products from "../../../components/product/Products.svelte";
-	import {goto} from '$app/navigation'
+	import {goto, preloadData} from '$app/navigation'
   	import { page } from "$app/stores";
 
 	import { setContext } from 'svelte';
@@ -32,7 +32,10 @@
 		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
 			<Search>
 				<div slot="product" let:product>
-					<Product {product} selected={$page.params?.id == product.id} on:click={() => {goto(`/dashboard/products/${product.id}`); $open.open = false;}}/>
+					<Product {product} selected={$page.params?.id == product.id} 
+					on:click={() => {goto(`/dashboard/products/${product.id}`); $open.open = false;}}
+					on:mouseover={() => {preloadData(`/dashboard/orphans/${product.id}`)}}
+					on:mousedown={() => {preloadData(`/dashboard/orphans/${product.id}`)}}/>
 				</div>
 
 				<div slot="header" class="header">

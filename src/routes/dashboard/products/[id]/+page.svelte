@@ -200,9 +200,10 @@
         gap: 1em;
     }
     .image {
-        width: 20em;
+        max-width: 20em;
+        max-height: 20em;
+        object-fit: contain;
         display: flex;
-        /* flex: 1; */
     }
     @media(max-width: 40em) {
         .image {

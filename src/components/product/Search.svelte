@@ -106,7 +106,7 @@
             {/each}
             <span>검색중...</span>
         {:then products}
-            {#each products as product}
+            {#each products as product (product.id)}
                 <slot product={product} name="product">
                     <a href={`/dashboard/products/${product.id}`}>{product.name}</a>
                 </slot>

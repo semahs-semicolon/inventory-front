@@ -11,6 +11,7 @@
 	import Search from "../../../components/product/Search.svelte";
 	import PrimaryButton from "../../../components/button/PrimaryButton.svelte";
 	import SearchOrphans from "../../../components/product/SearchOrphans.svelte";
+	import { preloadData } from "$app/navigation";
 
 	const open = writable({should: false, open: false});
 	let innerWidth = 10000;
@@ -33,7 +34,10 @@
 		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
 			<SearchOrphans>
 				<div slot="product" let:product>
-					<Product {product} selected={$page.params?.id == product.id} on:click={() => {goto(`/dashboard/orphans/${product.id}`); $open.open = false;}}/>
+					<Product {product} selected={$page.params?.id == product.id} 
+						on:click={() => {goto(`/dashboard/orphans/${product.id}`); $open.open = false;}}
+						on:mouseover={() => {preloadData(`/dashboard/orphans/${product.id}`)}}
+						on:mousedown={() => {preloadData(`/dashboard/orphans/${product.id}`)}}/>
 				</div>
 
 				<div slot="header" class="header">

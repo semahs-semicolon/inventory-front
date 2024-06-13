@@ -10,10 +10,10 @@
 <div class="tree-element" draggable={draggable} class:enabledrag={draggable} on:dragstart={(e) => {
     e.dataTransfer.dropEffect ="move";
     e.dataTransfer.setData("seda/product", JSON.stringify(product));
-}} class:selected={selected} on:click on:dblclick>
+}} class:selected={selected} on:click on:dblclick on:mouseover on:mouseover>
     <div class="image">
         {#if product.primaryImage != undefined}
-            <img src={imageIdToUrl(product.primaryImage,  `${window.devicePixelRatio*32},fit,jpeg`)}/>
+            <img src={imageIdToUrl(product.primaryImage,  `60,fit,jpeg`)}/>
         {:else}
             <div class="box">
                 X
@@ -52,6 +52,8 @@
     }
     .tree-element .image img {
         width: 2em;
+        height: 2.5em;
+        object-fit: contain;
     }
     .tree-element .image {
         display: flex;

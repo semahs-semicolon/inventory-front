@@ -105,7 +105,7 @@
                                 X
                             </div>
                             {:else}
-                            <img class="image" src={imageIdToUrl(item.product.primaryImage, `${window.devicePixelRatio*24},fit,jpeg`)}/>
+                            <img class="image" src={imageIdToUrl(item.product.primaryImage, `60,fit,jpeg`)}/>
                             {/if}
                             <a href={`/dashboard/products/${item.product.id}`} on:click|stopPropagation>{item.product.name}</a> 
                         </span>
@@ -135,6 +135,7 @@
     .image {
         height: 1.5em;
         width: 1.5em;
+        object-fit: contain;
     }
     .box {
         border-width: 1px;
