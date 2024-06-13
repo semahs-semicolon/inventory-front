@@ -64,7 +64,7 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    size: 5,
+                    size: 10,
                     page: 0,
                     embedding: a.embedding
                 })
