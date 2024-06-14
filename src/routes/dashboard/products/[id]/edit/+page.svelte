@@ -4,6 +4,7 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
 	import PrimaryButton from "../../../../../components/button/PrimaryButton.svelte";
 	import TextArea from "../../../../../components/button/TextArea.svelte";
 	import TextField from "../../../../../components/button/TextField.svelte";
+	import { CATEGORIES } from "../../../../../stores";
 
 
     export let data;
@@ -11,6 +12,8 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
     let productName = data.product.name;
     let productDesc = data.product.description;
     let imageId = data.product.primaryImage;
+
+    let newCategory = data.product.categoryId?.toString();
     const create = async () => {
         let newImageId = imageId;
         if (file != undefined) {
@@ -34,7 +37,29 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
             })
         });
         const json = await res.json();
+
+        if (newCategory != data.product.parentCategoryId) {
+            const res = await authfetch(`${API_URL()}/products/${data.product.id}/review`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    categoryId: newCategory == "null" ? null : newCategory
+                })
+            });
+            const json = await res.json();
+        }
+        
+
         history.back();
+    }
+
+
+    const getCategoryName = (a) => {
+        if (a == null) return ""
+        const category = $CATEGORIES[a];
+        return getCategoryName(category.parentCategoryId) + " > " + category.name;
     }
 
     let file;
@@ -75,6 +100,17 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
             
             <TextArea bind:value={productDesc} rows=20/>
             <br/>
+
+            <span>카테고리 변경</span><br/>
+            <select bind:value={newCategory}>
+
+                <option value="null">없음</option>
+                {#each data.categories  as category}
+                    <option value={category.categoryId}>{getCategoryName(category.categoryId)}</option>
+                {/each}
+            </select>
+            <br/>
+
             <PrimaryButton on:click={create}>저장!</PrimaryButton>
         </div>
     </div>

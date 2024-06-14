@@ -1,8 +1,10 @@
 import { get }from 'svelte/store';
 import { ACCESS_TOKEN } from "./stores";
 
-export const API_URL = () => `https://${dev ? 'internal.inventory.seda.club' : location.hostname}/api`
 import { dev } from '$app/environment';
+
+// export const API_URL = () => `https://${dev ? 'internal.inventory.seda.club' : location.hostname}/api`
+export const API_URL = () => `http://127.0.0.1:8080`
 // export const API_URL = () => "https://internal.inventory.seda.club/api"
 // export const API_URL = "http://192.168.219.100/panel/api"
 

@@ -10,6 +10,14 @@
 	import { fly } from "svelte/transition";
 	import Search from "../../../components/product/Search.svelte";
 	import PrimaryButton from "../../../components/button/PrimaryButton.svelte";
+	import { CATEGORIES } from "../../../stores";
+
+	export let data;
+
+	for (const category of data.categories) {
+		$CATEGORIES[category.categoryId] = category;
+	}
+
 
 	const open = writable({should: false, open: false});
 	let innerWidth = 10000;

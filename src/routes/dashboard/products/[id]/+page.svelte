@@ -5,6 +5,7 @@
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
 	import PrimaryButton from '../../../../components/button/PrimaryButton.svelte';
 	import { goto } from '$app/navigation';
+	import { CATEGORIES } from '../../../../stores.js';
 
     const open = getContext('menu-context');
 
@@ -87,6 +88,14 @@
             original: parentItem
         }
     }
+
+
+    const getCategoryName = (a) => {
+        if (a == null) return ""
+        const category = $CATEGORIES[a];
+        return getCategoryName(category.parentCategoryId) + " > " + category.name;
+    }
+
     
     let selectedItem, hoveredItem;
     let innerHeight, innerWidth;
@@ -114,6 +123,7 @@
                     <PrimaryButton on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)}>수정하기</PrimaryButton>
                     <PrimaryButton on:click={deleteProduct} disabled={data.items.length !== 0}>삭제</PrimaryButton>
                 </div>
+                <p>{data.product.categoryId == null ? "카테고리: 없음" : "카테고리: "+getCategoryName(data.product.categoryId)} {!data.product.categoryAccepted ? " / 카테고리 분류 수락되지 않음" : ""}</p>
                 <p>{data.product.description}</p>
 
             </div>
