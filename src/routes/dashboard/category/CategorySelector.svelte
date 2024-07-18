@@ -3,6 +3,7 @@
 	import { goto } from "$app/navigation";
 	import { API_URL, authfetch, imageIdToUrl } from "../../../api";
 	import PrimaryButton from "../../../components/button/PrimaryButton.svelte";
+	import TextField from "../../../components/button/TextField.svelte";
 	import Product from "../../../components/product/Product.svelte";
 
     export let category;
@@ -26,9 +27,12 @@
         const json = await res.json();
         invalidateAll();
     }
+
+    let search = '';
 </script>
 
 <div class="wrapper">
+    <TextField placeholder="검색어를 입력.." bind:value={search}/>
     <span class="name">
         {#if category.categoryId != null}
             {#if category.parentCategoryId != null}
@@ -55,7 +59,7 @@
     </span>
     <hr/>
     <div class="categoryList">
-        {#each childCategories.sort((a,b) => a.name.localeCompare(b.name)) as child}
+        {#each childCategories.filter(a => a.name.includes(search)).sort((a,b) => a.name.localeCompare(b.name)) as child}
             <a class="category" href="/dashboard/category/{child.categoryId}">
                 <div class="imageContainer">
                     {#if child.primaryImage}
@@ -70,7 +74,7 @@
         {/each}
     </div>
     <div class="productList">
-        {#each category.products.sort((a,b) => a.name.localeCompare(b.name)) as product}
+        {#each category.products.filter(a => a.name.includes(search)).sort((a,b) => a.name.localeCompare(b.name)) as product}
             <div class="product">
                 <Product product={product} on:dblclick={goto(`/dashboard/products/${product.id}`)}/>
             </div>

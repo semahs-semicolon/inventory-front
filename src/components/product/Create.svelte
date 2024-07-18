@@ -16,8 +16,8 @@
     let fileupload;
 
     const create = async () => {
-        madeReq = true;
         if (madeReq) return;
+        madeReq = true;
         try {
             const fileData = await fileupload;
 
