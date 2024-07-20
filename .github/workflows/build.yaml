@@ -33,4 +33,4 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - name: deploy to s3
         run: |
-          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/ --recursive
+          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/
