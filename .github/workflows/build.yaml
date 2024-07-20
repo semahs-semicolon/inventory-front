@@ -28,9 +28,9 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
-          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           role-session-name: samplerolesession
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ vars.AWS_REGION }}
       - name: deploy to s3
         run: |
-          aws s3 sync build/ s3://${{ env.BUCKET_NAME }}/ --recursive
+          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/ --recursive
