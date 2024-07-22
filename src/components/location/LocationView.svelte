@@ -150,7 +150,7 @@
 <div class="positioner" style:top={`${y * 100 / gridHeight}%`} style:left={`${x * 100 / gridWidth}%`} style:width={`${width *100/gridWidth}%`} style:height={`${height * 100 / gridHeight}%`}>
         {#if tree.backgroundId != undefined}
             <div class="background2">
-                <img src={imageIdToUrl(tree.backgroundId, `${window.devicePixelRatio*Math.max(width /gridWidth * parentWidth, height  / gridHeight * parentHeight)},fit,jpeg`)} alt="background of {tree?.name}"/>
+                <img src={imageIdToUrl(tree.backgroundId, `webp`)} alt="background of {tree?.name}"/>
             </div>
         {/if}
         <div class="container">

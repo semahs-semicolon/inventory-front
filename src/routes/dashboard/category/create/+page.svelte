@@ -25,7 +25,7 @@
             const res = await authfetch(`${API_URL()}/categories`, {
                 method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
                 body: JSON.stringify({
                     name: categoryName, description: categoryDesc, primaryImage: fileData?.id, parentCategoryId: parentId == "undefined" ? null : parentId

@@ -16,7 +16,7 @@
         await authfetch(`${API_URL()}/products/${data.product.id}`, {
             method: 'DELETE',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             }
         });
         location.href = "/dashboard";
@@ -116,7 +116,7 @@
         </div>
         <hr/>
         <div class="real-content">
-            <img class="image" src={imageIdToUrl(data.product.primaryImage,  `${window.devicePixelRatio*500},fit,jpeg`)}/>
+            <img class="image" src={imageIdToUrl(data.product.primaryImage,  `webp`)}/>
             <div class="right"> 
                 <div class="content-header">
                     <h1>{data.product.name}</h1>

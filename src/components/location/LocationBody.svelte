@@ -31,7 +31,7 @@
         const res = await authfetch(`${API_URL()}/locations`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 name: name,
@@ -54,7 +54,7 @@
         const res = await authfetch(`${API_URL()}/locations/${tree.id}/name`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 name: name

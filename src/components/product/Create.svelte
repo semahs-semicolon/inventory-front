@@ -24,7 +24,7 @@
             const res = await authfetch(`${API_URL()}/products`, {
                 method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
                 body: JSON.stringify({
                     name: productName, description: productDesc, imageId: fileData.id, parentCategoryId: null

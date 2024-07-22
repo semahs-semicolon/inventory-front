@@ -30,7 +30,7 @@
             intermediate = authfetch(`${API_URL()}/items`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
                 body: JSON.stringify({
                     productId: id,
@@ -43,7 +43,7 @@
             intermediate = authfetch(`${API_URL()}/items/${theItem.id}/count`, {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
                 body: JSON.stringify({
                     count: count
@@ -105,7 +105,7 @@
                                 X
                             </div>
                             {:else}
-                            <img class="image" src={imageIdToUrl(item.product.primaryImage, `60,fit,jpeg`)}/>
+                            <img class="image" src={imageIdToUrl(item.product.primaryImage, `thumbnail`)}/>
                             {/if}
                             <a href={`/dashboard/products/${item.product.id}`} on:click|stopPropagation>{item.product.name}</a> 
                         </span>

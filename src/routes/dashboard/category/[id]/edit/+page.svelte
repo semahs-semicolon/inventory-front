@@ -33,7 +33,7 @@
             const res = await authfetch(`${API_URL()}/categories/${data.category.categoryId}`, {
                 method: 'PATCH',
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
                 body: JSON.stringify({
                     name: categoryName, description: categoryDesc, primaryImage: newImageId
@@ -80,12 +80,12 @@
     let file;
     let src;
     if (imageId != null)
-        src = imageIdToUrl(imageId, `${window.devicePixelRatio*500},fit,jpeg`);
+        src = imageIdToUrl(imageId, `webp`);
     $: {
         if (file != undefined) {
             src = URL.createObjectURL(file[0]);
         } else if (imageId != null) {
-            src = imageIdToUrl(imageId, `${window.devicePixelRatio*500},fit,jpeg`)
+            src = imageIdToUrl(imageId, `webp`)
         } else
             src = null;
     }

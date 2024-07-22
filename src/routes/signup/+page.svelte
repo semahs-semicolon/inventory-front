@@ -10,7 +10,7 @@
         const resp = await fetch(`${API_URL()}/users/signup`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 username: username,
