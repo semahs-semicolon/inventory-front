@@ -51,12 +51,10 @@
             console.log("not null");
             src = URL.createObjectURL(file[0]);
 
-            const form = new FormData();
-            form.append("file", file[0]);
             $LAST_SEARCH_RESULT = []
             elements = fetch(`${API_URL()}/embedding/process`, {
                 method: "POST",
-                body: form
+                body: file[0]
             }).then(a => a.json())
             .then(a => authfetch(`${API_URL()}/products/imageSearch`, {
                 method: "POST",
