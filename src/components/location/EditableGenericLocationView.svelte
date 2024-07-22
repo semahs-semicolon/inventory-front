@@ -29,7 +29,7 @@
         const res = await authfetch(`${API_URL()}/locations/layout`, {
             method: "PATCH",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify(Object.values(currentUpdates))
         });
@@ -44,7 +44,7 @@
         const res = await authfetch(`${API_URL()}/locations`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 name: name,
@@ -67,7 +67,7 @@
         const res = await authfetch(`${API_URL()}/locations/${tree.id}/name`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 name: name
@@ -107,7 +107,7 @@
         const res = await authfetch(`${API_URL()}/locations/${tree.id}/background`, {
             method: 'PUT',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 imageId: stuff
@@ -207,7 +207,7 @@
                             authfetch(`${API_URL()}/items`, {
                                 method: "POST",
                                 headers: {
-                                    "Content-Type": "application/json"
+                                    "Content-Type": "application/json; charset=UTF-8"
                                 },
                                 body: JSON.stringify({
                                     productId: data.id,

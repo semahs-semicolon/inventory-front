@@ -54,14 +54,14 @@
             const form = new FormData();
             form.append("file", file[0]);
             $LAST_SEARCH_RESULT = []
-            elements = fetch(`${API_URL()}2/process`, {
+            elements = fetch(`${API_URL()}/embedding/process`, {
                 method: "POST",
                 body: form
             }).then(a => a.json())
             .then(a => authfetch(`${API_URL()}/products/imageSearch`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json; charset=UTF-8"
                 },
                 body: JSON.stringify({
                     size: 10,

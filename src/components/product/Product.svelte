@@ -13,7 +13,7 @@
 }} class:selected={selected} on:click on:dblclick on:mouseover on:mouseover>
     <div class="image">
         {#if product.primaryImage != undefined}
-            <img src={imageIdToUrl(product.primaryImage,  `60,fit,jpeg`)}/>
+            <img src={imageIdToUrl(product.primaryImage,  `thumbnail`)}/>
         {:else}
             <div class="box">
                 X
