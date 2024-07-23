@@ -80,7 +80,7 @@
     <div class="header">
         <span>카탈로그</span>
         <span class="search2">
-            <!-- <PrimaryButton>사진 검색</PrimaryButton> -->
+            <!-- <PrimaryButton>사진 검색<ㅁ/PrimaryButton> -->
             {#if file == undefined}
                 <input type="text" on:change {...$$props}  placeholder="검색" class="grow" bind:value={search}/>
                 <label for="file-input" class="imgsearch">
