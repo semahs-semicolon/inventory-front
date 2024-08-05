@@ -1,70 +1,67 @@
 <script>
-	import { API_URL } from "../../api";
-	import PrimaryButton from "../../components/button/PrimaryButton.svelte";
-	import TextField from "../../components/button/TextField.svelte";
-	import { ACCESS_TOKEN } from "../../stores";
+	import { API_URL } from '../../api';
+	import { ACCESS_TOKEN } from '../../stores';
+	import Turnstile from '../../components/Turnstile.svelte';
+	let turnstileToken;
+	const onToken = (token) => {
+		turnstileToken = token;
+	};
+	let username = '',
+		password = '';
 
-    let username = '', password = '', nickname = '';
+	const signin = async () => {
+		const resp = await fetch(`${API_URL()}/signin`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				username: username,
+				password: password,
+				token: turnstileToken
+			})
+		});
+		if (resp.status == 200) {
+			const token = await resp.text();
+			$ACCESS_TOKEN = token;
 
-    const signin = async () => {
-        const resp = await fetch(`${API_URL()}/signin`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        })
-        if (resp.status == 200) {
-            const token = await resp.text();
-            $ACCESS_TOKEN = token;
-
-            location.href="/dashboard";
-        } else {
-            alert(await resp.text());   
-        }
-    }
+			location.href = '/dashboard';
+		} else {
+			alert(await resp.text());
+		}
+	};
 </script>
 
-<div class="content">
-    <div class="form">
-        <h1>SEDA Inventory System</h1>
-        <span>사용자 이름</span>
-        <TextField type="text" placeholder="username" bind:value={username}/>
-        <span>비밀번호</span>
-        <TextField type="password" placeholder="password" bind:value={password}/>
-        <PrimaryButton on:click={signin}>로그인</PrimaryButton>
-        <a href="/signup">아직 계정이 없으십니까?</a>
-    </div>
-</div>
+<div class="flex h-full w-full items-center justify-center font-medium">
+	<div class="flex flex-col items-center gap-10">
+		<div class="flex w-full flex-col items-center justify-center gap-2">
+			<span class="text-2xl font-semibold text-[#0060B7]">세마고등학교</span>
+			<span class="text-4xl font-semibold">과학실 물품 관리 시스템</span>
+		</div>
+		<div class="flex w-full flex-col items-center gap-4">
+			<input
+				type="text"
+				placeholder="아이디"
+				value={username}
+				class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0"
+			/>
+			<input
+				type="password"
+				placeholder="패스워드"
+				value={password}
+				class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0"
+			/>
+		</div>
 
-<style>
-    .content {
-        background-image: url("/seda.png");
-        background-repeat: no-repeat;
-        background-position-y: center;
-        display: flex;
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        flex-direction: row;
-    }
-    .form {
-        display: flex;
-        max-width: 30em;
-        background-color: lightblue;
-        flex-direction: column;
-        align-items: center;
-        flex: 1;
-        gap: 0.5em;
-        border-radius: 2em;
-        padding: 1em;
-        box-shadow: 0em 0em 0.5em black;
-        font-weight: 600;
-        font-size: small;
-    }
-    * {font-family: 'Nanum Gothic', sans-serif;}
-</style>
+		<div class="flex w-full flex-col items-center justify-center gap-4">
+			<button
+				class="mx-4 flex w-full items-center justify-center rounded-2xl bg-blue-500 py-2 text-xl font-medium text-white hover:bg-blue-600 hover:drop-shadow-lg"
+				on:click={signin}>로그인</button
+			>
+			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/"
+				>게스트 계정으로 로그인</a
+			>
+		</div>
+		<Turnstile on:token={onToken} />
+	</div>
+</div>
