@@ -70,6 +70,7 @@
 	}
 	.responsive {
 		display: flex;
+		min-width: 350px;
 		max-width: 350px;
 		flex: 1;
 		z-index: 40;

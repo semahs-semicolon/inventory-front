@@ -78,6 +78,7 @@
 		display: flex;
 		flex: 1;
 		max-width: 350px;
+		min-width: 350px;
 		z-index: 40;
 		background-color: white;
 	}
