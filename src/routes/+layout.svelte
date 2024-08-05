@@ -1,6 +1,5 @@
 <script>
-	import { onMount, setContext } from 'svelte';
-	import { polyfill } from 'mobile-drag-drop';
+	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
 	import '../app.css';
 	const popup = writable(undefined);
