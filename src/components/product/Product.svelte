@@ -4,6 +4,13 @@
     export let product;
     export let draggable = false;
     export let selected = false;
+
+
+	function generateHTML(a, orig) {
+		return a.replaceAll("_ ", "_").replaceAll(" _", "_").replaceAll("<", '&lt;').replaceAll(">", '&gt;').replaceAll("$$ST1$$", '<span class="highlight-match">').replaceAll("$$ST2$$", '</span>')
+	}
+
+
 </script>
 
 
@@ -21,13 +28,27 @@
         {/if}
     </div>
     <div class="name">
-        <span class="name-str">{product.name} {#if draggable}<a href={`/dashboard/products/${product.id}`}>go</a>{/if}</span>
-        <span class="description">{product.description}</span>
+        <span class="name-str">
+            {#if product.highlightName != undefined}
+                {@html generateHTML(product.highlightName)}
+            {:else}
+                {product.name} 
+            {/if} {#if draggable}<a href={`/dashboard/products/${product.id}`}>go</a>{/if}</span>
+        <span class="description">
+            {#if product.highlightDesc != undefined}
+                {@html generateHTML(product.highlightDesc)}
+            {:else}
+                {product.description} 
+            {/if}
+        </span>
     </div>
 </div>
 
 <style>
-
+    :global(.highlight-match) {
+        color: #ffa200;
+        font-weight: 500;
+    }
     .box {
         border-color: black;
         border-width: 1px;
