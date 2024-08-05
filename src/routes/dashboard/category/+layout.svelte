@@ -1,3 +1,7 @@
+<script>
+	import Footer from "../../../components/Footer.svelte";
+
+</script>
 <!-- <div>
     몰?루
 </div> -->
@@ -8,6 +12,7 @@
 <style>
 
     .wrapper {
+        flex-direction: column;
 		display: flex;
 		justify-content: start;
 		width: 100%;

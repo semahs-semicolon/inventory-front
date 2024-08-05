@@ -20,6 +20,7 @@
     <a href="/dashboard/products">물품 검색</a>
     <a href="/dashboard/orphans">연관X 목록</a>
     <a href="/dashboard/category">카테고리 검색</a>
+    <a href="/dashboard/notice">공지</a>
 </div>
 <ProgressBar color="#FFFF00" zIndex={100} />
 <div class="container">
@@ -29,11 +30,11 @@
 <style>
     .header {
         display: flex;
-        height: 3em;
         align-items: center;
         padding: 0.5em;
         padding-left: 1em;
         gap: 1em;
+        flex-wrap: wrap;
     }
     .header-title {
         font-size: larger;
