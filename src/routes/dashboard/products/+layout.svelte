@@ -1,8 +1,8 @@
 <script>
-	import Product from "../../../components/product/Product.svelte";
-	import Products from "../../../components/product/Products.svelte";
-	import {goto, preloadData} from '$app/navigation'
-  	import { page } from "$app/stores";
+	import Product from '../../../components/product/Product.svelte';
+	import Products from '../../../components/product/Products.svelte';
+	import { goto, preloadData } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
@@ -22,9 +22,9 @@
 	const open = writable({should: false, open: false});
 	let innerWidth = 10000;
 	let innerHeight;
-	
+
 	setContext('menu-context', open);
-	
+
 	$: $open.should = innerWidth < 1000;
 
 
@@ -32,15 +32,19 @@
 </script>
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="loadingbar"></div>
-<div class="wrapper">
+<div class="grid h-full w-full grid-cols-3">
 	{#if innerWidth < 1000 && $open.open}
 	<div class="bg"/>
 	{/if}
 	{#if innerWidth >= 1000 || $open.open || $page.params.id == undefined}
-		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
+		<div
+			class="col-start-0 col-end-1 flex flex-1"
+			class:menu={innerWidth < 1000 && $open.open}
+			transition:fly={{ duration: 250, x: '-100%', opacity: 1 }}
+		>
 			<Search>
 				<div slot="product" let:product>
-					<Product {product} selected={$page.params?.id == product.id} 
+					<Product {product} selected={$page.params?.id == product.id}
 					on:click={() => {goto(`/dashboard/products/${product.id}`); $open.open = false;}}
 					on:mouseover={() => {preloadData(`/dashboard/orphans/${product.id}`)}}
 					on:mousedown={() => {preloadData(`/dashboard/orphans/${product.id}`)}}/>

@@ -7,10 +7,9 @@
 	import { goto } from '$app/navigation';
 	import { CATEGORIES } from '../../../../stores.js';
 
-    const open = getContext('menu-context');
+	const open = getContext('menu-context');
 
-
-    export let data;
+	export let data;
 
     const deleteProduct = async () => {
         await authfetch(`${API_URL()}/products/${data.product.id}`, {
@@ -96,70 +95,99 @@
         return getCategoryName(category.parentCategoryId) + " > " + category.name;
     }
 
-    
+
     let selectedItem, hoveredItem;
     let innerHeight, innerWidth;
 </script>
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="body">
-    <div class="content">
-        <div class="header">
-            {#if $open.should}
-                <button on:click={() => {$open.open = !$open.open}}>
-                    <span class="material-symbols-outlined">
-                        menu
-                    </span>
-                </button>
-            {/if}
-            <span>물품 정보</span>
-        </div>
-        <hr/>
-        <div class="real-content">
-            <img class="image" src={imageIdToUrl(data.product.primaryImage,  `${window.devicePixelRatio*500},fit,jpeg`)}/>
-            <div class="right"> 
-                <div class="content-header">
-                    <h1>{data.product.name}</h1>
-                    <PrimaryButton on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)}>수정하기</PrimaryButton>
-                    <PrimaryButton on:click={deleteProduct} disabled={data.items.length !== 0}>삭제</PrimaryButton>
-                </div>
-                <p>{data.product.categoryId == null ? "카테고리: 없음" : "카테고리: "+getCategoryName(data.product.categoryId)} {!data.product.categoryAccepted ? " / 카테고리 분류 수락되지 않음" : ""}</p>
-                <p>{data.product.description}</p>
-
-            </div>
-        </div>
-        <hr/>
-        <div class="real-content2">
-            <h1>저장 위치</h1>
-            <p>총 {data.items.map(a => a.count).reduce((partialSum, a) => partialSum + a, 0)}개가 {data.items.length}곳에 저장되어 있습니다</p>
-            <div class="storage-list">
-                {#each data.items as item}
-                    <span class="item" 
-                        class:item-selected = {selectedItem == item}
-                        on:click={() => {if (selectedItem != item) {selectedItem=item; setupTreeView();} else {selectedItem = undefined }}}
-                        on:mouseenter={() => hoveredItem=item}
-                        on:mouseleave={() => hoveredItem=null}>
-                        <span>{item.count}x</span><span>{getSpecificLocation(item.locationId)}</span>
-                    </span>
-                {:else}
-                    <h3>물품이 저장된 곳이 없네요</h3>
-                {/each}
-            </div>
-        </div>
-    </div>
-    {#if selectedItem !== undefined}
-        <div class="relative">
-            <LocationView tree={visibleTree} movable={false} parentId={null} editing={false}>
-                <slot slot="background" let:tree>
-                    <div class:hovered={hoveredItem != null && hoveredItem?.locationId == tree?.id}
-                    class:selected = {selectedItem != null && selectedItem?.locationId == tree?.id}
-                    class="background" class:onroute = {routeIds.includes(tree.id)}>
-                
-                        <div class="title"
-                            class:hovered={hoveredItem != undefined && hoveredItem?.locationId == tree?.id}
-                            class:selected={selectedItem?.locationId == tree?.id}>
-                                <span>{tree.name}</span>
-                                <!-- {#if movable && editing}
+<div class="body col-start-1 col-end-4">
+	<div class="flex h-full flex-1 flex-col">
+		<div class="header text-xl font-medium">
+			{#if $open.should}
+				<button
+					on:click={() => {
+						$open.open = !$open.open;
+					}}
+				>
+					<span class="material-symbols-outlined"> menu </span>
+				</button>
+			{/if}
+			<span>물품 정보</span>
+		</div>
+		<hr />
+		<div class="real-content">
+			<img
+				class="image"
+				src={imageIdToUrl(data.product.primaryImage, `${window.devicePixelRatio * 500},fit,jpeg`)}
+			/>
+			<div class="right">
+				<div class="content-header">
+					<h1>{data.product.name}</h1>
+					<PrimaryButton on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)}
+						>수정하기</PrimaryButton
+					>
+					<PrimaryButton on:click={deleteProduct} disabled={data.items.length !== 0}
+						>삭제</PrimaryButton
+					>
+				</div>
+				<p>
+					{data.product.categoryId == null
+						? '카테고리: 없음'
+						: '카테고리: ' + getCategoryName(data.product.categoryId)}
+					{!data.product.categoryAccepted ? ' / 카테고리 분류 수락되지 않음' : ''}
+				</p>
+				<p>{data.product.description}</p>
+			</div>
+		</div>
+		<hr />
+		<div class="real-content2">
+			<h1>저장 위치</h1>
+			<p>
+				총 {data.items.map((a) => a.count).reduce((partialSum, a) => partialSum + a, 0)}개가 {data
+					.items.length}곳에 저장되어 있습니다
+			</p>
+			<div class="storage-list">
+				{#each data.items as item}
+					<span
+						class="item"
+						class:item-selected={selectedItem == item}
+						on:click={() => {
+							if (selectedItem != item) {
+								selectedItem = item;
+								setupTreeView();
+							} else {
+								selectedItem = undefined;
+							}
+						}}
+						on:mouseenter={() => (hoveredItem = item)}
+						on:mouseleave={() => (hoveredItem = null)}
+					>
+						<span>{item.count}x</span><span>{getSpecificLocation(item.locationId)}</span>
+					</span>
+				{:else}
+					<h3>물품이 저장된 곳이 없네요</h3>
+				{/each}
+			</div>
+		</div>
+	</div>
+	{#if selectedItem !== undefined}
+		<div class="relative">
+			<LocationView tree={visibleTree} movable={false} parentId={null} editing={false}>
+				<slot slot="background" let:tree>
+					<div
+						class:hovered={hoveredItem != null && hoveredItem?.locationId == tree?.id}
+						class:selected={selectedItem != null && selectedItem?.locationId == tree?.id}
+						class="background"
+						class:onroute={routeIds.includes(tree.id)}
+					>
+						<div
+							class="title"
+							class:hovered={hoveredItem != undefined && hoveredItem?.locationId == tree?.id}
+							class:selected={selectedItem?.locationId == tree?.id}
+						>
+							<span>{tree.name}</span>
+							<!-- {#if movable && editing}
                                     <button on:click={rename}>rename</button>
                                 {/if}
                                 {#if movable && editing && tree.children.length == 0}
@@ -184,7 +212,7 @@
                 </div>
                 <span class="route">
                     {#each route as segment}
-                        <span class="segment" class:segment-selected={segment.id == visibleTree.id}>{segment.name}</span> 
+                        <span class="segment" class:segment-selected={segment.id == visibleTree.id}>{segment.name}</span>
                         {#if segment !== route[route.length-1]} &gt; {/if}
                     {/each}
                 </span>
@@ -247,7 +275,7 @@
     .onroute {
         background-color: #5a83251A;
     }
-    .segment-selected { 
+    .segment-selected {
         background-color: #4d9de770 !important;
     }
     .title > span {
