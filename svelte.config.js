@@ -11,13 +11,8 @@ const config = {
 			pages: 'build',
 			assets: 'build',
 			fallback: '200.html'
-		}),
-		alias: {
-			components: 'src/components',
-			src: 'src'
-		}
+		})
 	},
-
 	preprocess: vitePreprocess()
 };
 
