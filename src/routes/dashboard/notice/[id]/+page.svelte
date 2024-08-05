@@ -69,6 +69,7 @@
         margin-right: auto;
         width: 100%;
         background-color: #FFFFFF;
+        white-space: pre-line
     }
     .author {
         color: gray;
