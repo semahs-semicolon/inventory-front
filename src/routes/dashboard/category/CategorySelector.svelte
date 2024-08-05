@@ -15,7 +15,7 @@
         const res = await authfetch(`${API_URL()}/categories`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 name: name,
@@ -43,7 +43,7 @@
         {/if}
         {#if category.primaryImage}
             <div class="imageWrapperContainer">
-                <img src={imageIdToUrl(category.primaryImage)}/>
+                <img src={imageIdToUrl(category.primaryImage, "thumbnail")}/>
             </div>
         {/if}
         {category.name}
@@ -63,7 +63,7 @@
             <a class="category" href="/dashboard/category/{child.categoryId}">
                 <div class="imageContainer">
                     {#if child.primaryImage}
-                        <img src={imageIdToUrl(child.primaryImage)}/>
+                        <img src={imageIdToUrl(child.primaryImage, "thumbnail")}/>
                     {:else}
                         N/A
                     {/if}

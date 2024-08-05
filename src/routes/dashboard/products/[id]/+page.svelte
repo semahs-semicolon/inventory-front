@@ -15,7 +15,7 @@
         await authfetch(`${API_URL()}/products/${data.product.id}`, {
             method: 'DELETE',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             }
         });
         location.href = "/dashboard";

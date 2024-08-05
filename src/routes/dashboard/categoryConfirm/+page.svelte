@@ -55,7 +55,7 @@
                 categoryId: selected.categoryId
             }),
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             }
         });
         selected.categoryAccepted =true;
@@ -99,7 +99,7 @@
             <hr/>
             {#if selected != null}
             <div class="imageandproduct">
-                <img fetchPriority = "high" class="image" src={imageIdToUrl(selected?.primaryImage, `${window.devicePixelRatio*500},fit,jpeg`)}/>
+                <img fetchPriority = "high" class="image" src={imageIdToUrl(selected?.primaryImage, `webp`)}/>
                 <div class="product">
                     <PrimaryButton on:click={() => {goto(`/dashboard/products/${selected.id}`)}}>물품으로 이동하기</PrimaryButton>
                     <span>물품명: {selected?.name}</span>

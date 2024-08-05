@@ -27,7 +27,7 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
         const res = await authfetch(`${API_URL()}/products/${data.product.id}`, {
             method: 'PATCH',
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
                 name: productName, description: productDesc, imageId: newImageId, parentCategoryId: null
@@ -38,12 +38,12 @@ import { API_URL, authfetch, imageIdToUrl } from "../../../../../api";
     }
 
     let file;
-    let src = imageIdToUrl(imageId, `${window.devicePixelRatio*500},fit,jpeg`);
+    let src = imageIdToUrl(imageId, `webp`);
     $: {
         if (file != undefined) {
             src = URL.createObjectURL(file[0]);
         } else
-            src = imageIdToUrl(imageId, `${window.devicePixelRatio*500},fit,jpeg`);
+            src = imageIdToUrl(imageId, `webp`);
     }
 </script>
 
