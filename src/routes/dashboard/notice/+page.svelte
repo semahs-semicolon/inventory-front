@@ -26,7 +26,7 @@
                     <span class="date">{new Date(notice.date).toLocaleDateString('ko')}</span>
                 </span>
 
-                <span class="content">{notice.content}</span>
+                <span class="content">{notice.content} ...</span>
             </div>
         {/each}
     </div>
@@ -84,6 +84,7 @@
     }
     .content {
         color: gray;
+        white-space: pre-line
     }
     .date {
         color: gray;
