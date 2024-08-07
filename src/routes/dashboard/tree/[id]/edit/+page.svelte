@@ -45,8 +45,6 @@
     }
     $: data.tree, (()=>{
         setup();
-        console.log(tree);
-        console.log(fullTree);
     })();
 
 

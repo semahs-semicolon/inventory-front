@@ -5,7 +5,6 @@
 
 
     const download = () => {
-        console.log("EXPORT")
         authfetch(`${API_URL()}/export`, {
                 method: "GET"
             })

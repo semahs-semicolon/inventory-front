@@ -13,7 +13,6 @@
         fullTree = undefined;
         tree = undefined;
         
-        console.log(data.tree);
         tree = injectParentLink( {...data.tree });
         tree.metadata.x = 0;
         tree.metadata.y = 0;

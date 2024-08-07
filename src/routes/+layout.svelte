@@ -5,7 +5,6 @@
 
     const popup = writable(undefined);
     setContext('popup', popup);
-    $: console.log($popup);
 
     let aghhh;
     let tomb;

@@ -12,7 +12,6 @@
 
     let evDispatcher = createEventDispatcher();
 
-    $: console.log(realLocation)
 </script>
 <T.Mesh
     position.x = {realLocation.metadata.x} position.y = {realLocation.metadata.z} position.z = {realLocation.metadata.y}

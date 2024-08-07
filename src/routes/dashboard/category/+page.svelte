@@ -8,7 +8,6 @@
 	import CategorySelector from "./CategorySelector.svelte";
 
     export let data;
-    console.log(data);
     
 
     // const requestAI = async () => {

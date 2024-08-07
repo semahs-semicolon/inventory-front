@@ -10,7 +10,6 @@
 
     export let locations;
 
-    console.log(locations);
 
     // interactivity();
 </script>

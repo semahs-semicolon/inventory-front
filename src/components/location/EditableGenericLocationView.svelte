@@ -182,7 +182,6 @@
                                 alert("위치 사이클을 형성할 수 없습니다")   
                                 return;
                             }
-                            console.log(theElement);
                             theElement.parent.children = theElement.parent.children.filter(elem => elem.id !== dataStr);
                             tree.children = [...tree.children, theElement];
                             theElement.parent = tree;

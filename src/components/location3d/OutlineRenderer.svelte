@@ -32,7 +32,6 @@
         outlineEffect.selection.add(selectedMesh)
       }
       composer.addPass(new EffectPass(camera, outlineEffect))
-      console.log(composer);
     }
   
     $: setupEffectComposer($camera, selectedMesh)

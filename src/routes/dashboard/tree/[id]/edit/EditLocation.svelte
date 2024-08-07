@@ -19,13 +19,6 @@
 
     let evDispatcher = createEventDispatcher();
     let controls;
-    $: {
-        console.log(controls);
-        // controls.on
-        // if (controls != undefined)
-        // controls.setMode('rotate')
-    }
-
     const onKeypress = (ev) => {
         if (controls == undefined) return;
         if (ev.key == 'r') {
