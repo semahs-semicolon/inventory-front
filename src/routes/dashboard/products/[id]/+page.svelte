@@ -146,7 +146,7 @@
     {#if selectedItem !== undefined}
         <div class="relative">
             <ThreeDMap locations={visibleTree}>
-                <PlainLocation realLocation={visibleTree} depth={3} hovered={hoveredItem?.locationId} selected={selectedItem?.locationId} onroute={routeIds.slice(location+1)}/>
+                <PlainLocation isRoot={true} realLocation={visibleTree} depth={3} hovered={hoveredItem?.locationId} selected={selectedItem?.locationId} onroute={routeIds.slice(location+1)}/>
             </ThreeDMap>
             <div class="controls">
                 <div class="controls-top">

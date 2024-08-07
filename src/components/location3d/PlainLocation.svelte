@@ -4,11 +4,14 @@
 	import Location3D from "./Location3D.svelte";
 	import { createEventDispatcher } from "svelte";
 	import { goto } from "$app/navigation";
+	import { modelIdToUrl } from "../../api";
+	import { GLTF } from "@threlte/extras";
 
     export let realLocation;
     export let hovered;
     export let selected;
     export let depth;
+    export let isRoot = false;
 
     let evDispatcher = createEventDispatcher();
 
@@ -22,6 +25,15 @@
             (hovered == realLocation.id) ? "#b2ce79" :
             (selected == realLocation.id) ? "#69aeae" : "white"
         }>
+        {#if isRoot}
+            {#if realLocation.metadata.internal}
+                <GLTF url={modelIdToUrl(realLocation.metadata.internal)}/>
+            {/if}
+        {:else}
+            {#if realLocation.metadata.external}
+                <GLTF url={modelIdToUrl(realLocation.metadata.external)}/>
+            {/if}
+        {/if}
         
 
     </Location3D>
@@ -29,7 +41,7 @@
     <T.Mesh position.y={0.1}>
         {#if depth > 1}
             {#each realLocation.children as child}
-                <svelte:self bind:realLocation={child} id={child.id} depth={depth-1} on:selection {hovered} {selected}/>
+                <svelte:self bind:realLocation={child} id={child.id} depth={depth-1} on:selection {hovered} {selected} isRoot={false}/>
             {/each}
         {/if}
     </T.Mesh>

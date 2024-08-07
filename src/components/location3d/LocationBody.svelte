@@ -126,7 +126,7 @@
         <div class="darkbg"/>
     {/if}
     <ThreeDMap locations={rootTree} on:selection={(ev) => {selectedLocation = ev.detail;}}>
-        <PlainLocation bind:realLocation={rootTree} depth={3} hovered={hoveredLocation?.id} selected={selectedLocation?.id} on:selection={(ev) => {selectedLocation = ev.detail;}}/>
+        <PlainLocation isRoot={true}  bind:realLocation={rootTree} depth={3} hovered={hoveredLocation?.id} selected={selectedLocation?.id} on:selection={(ev) => {selectedLocation = ev.detail;}}/>
     </ThreeDMap>
     <div class="collapsibleControl">
         <SecondaryButton class=".toolbar" on:click={() => treeShow = !treeShow}> 위치 트리 </SecondaryButton>
