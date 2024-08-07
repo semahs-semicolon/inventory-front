@@ -23,6 +23,7 @@
             (hovered == realLocation.id) ? "#b2ce79" :
             (selected == realLocation.id) ? "#69aeae" : "white"
         }>
+        
 
     </Location3D>
 

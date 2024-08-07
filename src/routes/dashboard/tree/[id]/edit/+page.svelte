@@ -35,6 +35,9 @@
         tree.metadata.x = 0;
         tree.metadata.y = 0;
         tree.metadata.z = 0;
+        tree.metadata.rx = 0;
+        tree.metadata.ry = 0;
+        tree.metadata.rz = 0;
         const thing = searchId(fullTree, tree.id);
         thing.children = tree.children;
         selectedLocation = tree;
