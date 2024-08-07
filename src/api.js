@@ -3,8 +3,8 @@ import { ACCESS_TOKEN } from "./stores";
 
 import { dev } from '$app/environment';
 
-// export const API_URL = () => `https://${dev ? 'inventory.seda.club' : location.hostname}/api`;
-export const API_URL = () => `http://127.0.0.1:8080`
+export const API_URL = () => `https://${dev ? 'inventory.seda.club' : location.hostname}/api`;
+// export const API_URL = () => `http://127.0.0.1:8080`
 // export const API_URL = () => "https://internal.inventory.seda.club/api"
 // export const API_URL = "http://192.168.219.100/panel/api"
 
