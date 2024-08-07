@@ -1,21 +1,27 @@
 <script>
     import {injectParentLink, searchId} from "../../../../utils/treeManipulation";
-	import LocationBody from "../../../../components/location/LocationBody.svelte";
+	import LocationBody from "../../../../components/location3d/LocationBody.svelte";
     export let data;
 
     let tree;
 
     let selectedLocation = tree;
 
-    let fullTree = {children: data.fullTree};
-
+    let fullTree;
 
     const setup = () => {
-        tree = injectParentLink( {...data.tree, x: 0, y: 0, width: 100, height: 100});
-        const thing = searchId(fullTree, tree.id);
+        fullTree = undefined;
+        tree = undefined;
+        
+        tree = injectParentLink( {...data.tree });
+        tree.metadata.x = 0;
+        tree.metadata.y = 0;
+        tree.metadata.z = 0;
+        const fullTree2 = {children: data.fullTree};
+        const thing = searchId(fullTree2, tree.id);
         thing.children = tree.children;
         selectedLocation = tree;
-        fullTree = fullTree;
+        fullTree = fullTree2
     }
     $: data.tree, (()=>{
         setup();
@@ -23,7 +29,9 @@
 </script>
 
 <div class="root">
-    <LocationBody bind:rootTree={tree} bind:fullTree={fullTree} bind:selectedLocation/>
+    {#if fullTree != undefined && tree != undefined}
+        <LocationBody bind:rootTree={tree} bind:fullTree={fullTree} bind:selectedLocation/>
+    {/if}
 </div>
 
 <style>
