@@ -34,3 +34,7 @@ export function imageIdToUrl(id, options = "200,fit,jpeg") {
     return `https://${dev ? 'inventory.seda.club' : location.hostname}/scaled/${options}/${id}`;
     // return `https://s4.cloud.seda.club/swift/v1/AUTH_7913d9d4f87343c28de59cf00a57ef44/images/${id}`
 }
+export function modelIdToUrl(id) {
+    return `https://${dev ? 'inventory.seda.club' : location.hostname}/image/${id}`;
+    // return `https://s4.cloud.seda.club/swift/v1/AUTH_7913d9d4f87343c28de59cf00a57ef44/images/${id}`
+}

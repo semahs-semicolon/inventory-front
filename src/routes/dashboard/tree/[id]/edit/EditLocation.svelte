@@ -1,12 +1,15 @@
 <script>
 	import { T } from "@threlte/core";
 	import Location3D from "../../../../../components/location3d/Location3D.svelte";
-	import { Text, TransformControls } from "@threlte/extras";
+	import { GLTF, Text, TransformControls } from "@threlte/extras";
 	import { searchId } from "../../../../../utils/treeManipulation";
 	import { createEventDispatcher } from "svelte";
 	import { Vector3 } from "three";
 	import Portal from "svelte-portal";
 	import PrimaryButton from "../../../../../components/button/PrimaryButton.svelte";
+	import { get, writable } from "svelte/store";
+	import { ACCESS_TOKEN } from "../../../../../stores";
+	import { API_URL, modelIdToUrl } from "../../../../../api";
 
     export let location;
     export let id;
@@ -52,6 +55,60 @@
 
     let meshTranslation;
     let meshResize;
+
+    const uploadFile = (file, progressF1) => {
+        return new Promise((resolve, err) => {
+                const formData = new FormData();
+                formData.append("image", file);
+
+                let token = get(ACCESS_TOKEN);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", `${API_URL()}/images`, true);
+                xhr.setRequestHeader("Authorization", "Bearer "+token)
+                xhr.upload.onprogress = function(e) {
+                    var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                    progressF1.set( percentComplete);
+                };
+
+                xhr.onerror = function(e) {
+                    progressF1.set( undefined);
+                    // err(e.)
+                }
+                xhr.onload = function(e) {
+                    progressF1.set(undefined);
+                    resolve(JSON.parse(xhr.responseText));
+                }
+                xhr.send(formData);
+        });
+    }
+
+    let externalFile, internalFile, testFile;
+
+    let fileupload1, fileupload2;
+    let progressF1 = writable(undefined);
+    let progressF2 = writable(undefined);
+
+    $: {
+        if (externalFile != undefined) {
+            fileupload1 = uploadFile(externalFile[0], progressF1)
+                .then(res => {
+                    realLocation.metadata.external = res.id;
+                    realLocation = realLocation;
+                    $location = $location;
+                });
+        }
+    }
+    $: {
+
+        if (internalFile != undefined) {
+            fileupload2 = uploadFile(internalFile[0], progressF2)
+                .then(res => {
+                    realLocation.metadata.internal = res.id;
+                    realLocation = realLocation;
+                    $location = $location;
+                });
+        }
+    }
 </script>
 <svelte:window on:keypress={onKeypress}/>
 
@@ -59,6 +116,20 @@
     position.x = {realLocation.metadata.x} position.y = {realLocation.metadata.z} position.z = {realLocation.metadata.y}
     rotation.x = {realLocation.metadata.rx ?? 0} rotation.y = {realLocation.metadata.rz ?? 0} rotation.z = {realLocation.metadata.ry ?? 0}>
     <Location3D on:click={() => { evDispatcher('selection', realLocation.id); }} location={realLocation} forceRender>
+        {#if testFile != undefined}
+            <GLTF url={URL.createObjectURL(testFile[0])}/>
+        {:else}
+            {#if realLocation.id != $location.id}
+                {#if realLocation.metadata.external}
+                    <GLTF url={modelIdToUrl(realLocation.metadata.external)}/>
+                {/if}
+            {:else}
+                {#if realLocation.metadata.internal}
+                    <GLTF url={modelIdToUrl(realLocation.metadata.internal)}/>
+                {/if}
+            {/if}
+        {/if}
+
 
     </Location3D>
 
@@ -104,13 +175,21 @@
             <span class="attrib">Width: <input type="number" bind:value={realLocation.metadata.width}/></span>
             <span class="attrib">Height: <input type="number" bind:value={realLocation.metadata.height}/></span>
             <hr/>
-            {#if selectedId != $location.id}
-                <h3>외부 구조물</h3>
-            {:else}
-                <PrimaryButton>위치 추가</PrimaryButton>
-                <hr/>
-                <h3>내부 구조물</h3>
+            <span>Tip: Blender를 사용하여 glTF 파일을 제작하세요!</span>
+            {#if $progressF1 != undefined}
+                <span class="progress">모델 업로딩중... {$progressF1}%</span>
+                <progress value={$progressF1} max="100"/>
             {/if}
+            <span>외부 구조물: {realLocation.metadata.external}</span>
+            <span>외부 구조물 업로딩: <input type="file" bind:files={externalFile} accept=".gltf"/></span>
+            {#if $progressF2 != undefined}
+                <span class="progress">모델 업로딩중... {$progressF2}%</span>
+                <progress value={$progressF2} max="100"/>
+            {/if}
+            <span>내부 구조물: {realLocation.metadata.internal}</span>
+            <span>내부 구조물 업로딩: <input type="file" bind:files={internalFile}  accept=".gltf"/></span>
+            
+            <span>실험 해보기: <input type="file" bind:files={testFile}/> <PrimaryButton on:click={() => testFile = undefined}>clear</PrimaryButton></span>
         </div>
     </Portal>
 {/if}
