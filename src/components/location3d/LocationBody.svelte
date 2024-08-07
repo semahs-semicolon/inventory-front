@@ -291,8 +291,10 @@
         .collapsibleControl {
             display: flex;
             position: absolute;
+            right: 25em;
         }
     }
+
     @media(min-width: 700px) {
         .products {
             display: flex;
@@ -306,6 +308,11 @@
             z-index: 40;
             max-width: 92vw;
             min-width: 92vw;
+        }
+        .collapsibleControl {
+            display: flex;
+            position: absolute;
+            right: 0em;
         }
     }
 </style>
