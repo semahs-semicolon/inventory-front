@@ -1,10 +1,8 @@
 <script>
-    import LocationView from "./LocationView.svelte";
     import { API_URL, authfetch } from '../../api';
 	import TreeView from "../TreeView.svelte";
 	import Products from "../product/Products.svelte";
 	import Items from "../item/Items.svelte";
-	import EditableGenericLocationView from "./EditableGenericLocationView.svelte";
 	import Product from "../product/Product.svelte";
 	import { fly } from "svelte/transition";
 	import SecondaryButton from "../button/SecondaryButton.svelte";
@@ -12,19 +10,18 @@
 	import { goto } from "$app/navigation";
 	import PrimaryButton from "../button/PrimaryButton.svelte";
 	import ContextMenu from "../ContextMenu.svelte";
+    import ThreeDMap from './ThreeDMap.svelte';
+	import PlainLocation from "./PlainLocation.svelte";
     
     export let rootTree;
     export let fullTree;
 
-    export let selectedLocation;
-    export let hoveredLocation;
+    let innerWidth = 10000, innerHeight = 10000;
+
+    let selectedLocation, hoveredLocation;
 
     let treeShow = false;
     let toolbarShow = false;
-
-    let innerWidth = 10000;
-    let innerHeight = 10000;
-
 
     const create = async (tree) => {
         const name = prompt("name?");
@@ -35,11 +32,17 @@
             },
             body: JSON.stringify({
                 name: name,
-                x: 0,
-                y: 0,
-                width: 30,
-                height: 30,
-                parent: tree.id
+                parent: tree.id,
+                metadata: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                    rx: 0,
+                    ry: 0,
+                    rz: 0,
+                    width: 10,
+                    height: 10
+                }
             })
         });
         const json = await res.json();
@@ -92,7 +95,7 @@
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div slot="title" class="tree-title-container">
                     <span class="tree-title">위치 나무
-                        <PrimaryButton on:click={() => goto("/dashboard")}>루트로</PrimaryButton>
+                        <PrimaryButton on:click={() => goto("/dashboard/tree/0")}>루트로</PrimaryButton>
                     </span>
                     {#if treeShow}
                         <CloseButton on:click={() => treeShow=false}/>
@@ -104,6 +107,7 @@
                         <hr/>
                         <PrimaryButton on:click={() => create(element)}>새로 위치 만들기</PrimaryButton>
                         <PrimaryButton on:click={() => rename(element)}>이름 바꾸기</PrimaryButton>
+                        <PrimaryButton on:click={() => goto(`/dashboard/tree/${element.id}/edit`)}>편집하기</PrimaryButton>
                         <PrimaryButton on:click={() => doDelete(element)}>삭제하기</PrimaryButton>
                     </div>
                     <span 
@@ -121,14 +125,15 @@
     {#if (treeShow&& innerWidth < 1000 || toolbarShow&& innerWidth < 700) } 
         <div class="darkbg"/>
     {/if}
-    <EditableGenericLocationView bind:selectedLocation bind:hoveredLocation bind:rootTree>
-        <div class="collapsibleControl">
-            <SecondaryButton class=".toolbar" on:click={() => treeShow = !treeShow}> 위치 트리 </SecondaryButton>
-            {#if innerWidth < 700}
-                <SecondaryButton on:click={() => toolbarShow = !toolbarShow} disabled={selectedLocation == undefined}>물품 관리</SecondaryButton>
-            {/if}
-        </div>
-    </EditableGenericLocationView>
+    <ThreeDMap locations={rootTree} on:selection={(ev) => {selectedLocation = ev.detail;}}>
+        <PlainLocation bind:realLocation={rootTree} depth={3} hovered={hoveredLocation?.id} selected={selectedLocation?.id} on:selection={(ev) => {selectedLocation = ev.detail;}}/>
+    </ThreeDMap>
+    <div class="collapsibleControl">
+        <SecondaryButton class=".toolbar" on:click={() => treeShow = !treeShow}> 위치 트리 </SecondaryButton>
+        {#if innerWidth < 700}
+            <SecondaryButton on:click={() => toolbarShow = !toolbarShow} disabled={selectedLocation == undefined}>물품 관리</SecondaryButton>
+        {/if}
+    </div>
     {#if innerWidth >= 700 || toolbarShow}
         <div class="products" class:showHidden={toolbarShow}  transition:fly={{duration: 250, x: '100%', opacity: 1}}>
             {#if toolbarShow}

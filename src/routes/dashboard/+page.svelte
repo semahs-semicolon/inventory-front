@@ -1,25 +1,40 @@
 <script>
-	import LocationBody from "../../components/location/LocationBody.svelte";
-	import { injectParentLink } from "../../utils/treeManipulation";
-
+    import {injectParentLink, searchId} from "../../utils/treeManipulation";
+	import LocationBody from "../../components/location3d/LocationBody.svelte";
     export let data;
 
+    let tree;
 
+    let selectedLocation;
 
-    let rootTree = {
-        x: 0,
-        y: 0,
-        width: 100,
-        height: 100,
-        name: "인벤토리 시스템",
-        children: data.tree
+    let fullTree;
+
+    const setup = () => {
+        fullTree = undefined;
+        tree = undefined;
+        
+        tree = injectParentLink( {...data.tree });
+        tree.metadata.x = 0;
+        tree.metadata.y = 0;
+        tree.metadata.z = 0;
+        tree.metadata.rx = 0;
+        tree.metadata.ry = 0;
+        tree.metadata.rz = 0;
+        const fullTree2 = {children: data.fullTree};
+        const thing = searchId(fullTree2, tree.id);
+        thing.children = tree.children;
+        selectedLocation = tree;
+        fullTree = fullTree2
     }
-    rootTree = injectParentLink(rootTree)
-    console.log(rootTree)
+    $: data.tree, (()=>{
+        setup();
+    })();
 </script>
 
 <div class="root">
-   <LocationBody bind:rootTree bind:fullTree={rootTree}/>
+    {#if fullTree != undefined && tree != undefined}
+        <LocationBody bind:rootTree={tree} bind:fullTree={fullTree} bind:selectedLocation/>
+    {/if}
 </div>
 
 <style>

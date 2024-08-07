@@ -48,7 +48,6 @@
 
     $: {
         if (file != undefined) {
-            console.log("not null");
             src = URL.createObjectURL(file[0]);
 
             $LAST_SEARCH_RESULT = []
@@ -69,7 +68,6 @@
             })).then(a => a.json());
             elements.then(res => {$LAST_SEARCH_RESULT = res})
         } else {
-            console.log("null");
             src = null;
         }
     }

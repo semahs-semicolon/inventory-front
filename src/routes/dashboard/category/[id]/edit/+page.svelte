@@ -42,7 +42,7 @@
             const json = await res.json();
             history.back();
         } catch (e) {
-            console.log(e);;
+            console.log(e);
         }
     }
 

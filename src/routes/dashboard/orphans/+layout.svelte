@@ -22,7 +22,6 @@
 	$: $open.should = innerWidth < 1000;
 
 
-	console.log($page)
 </script>
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="loadingbar"></div>

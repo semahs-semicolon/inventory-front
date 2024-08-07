@@ -1,12 +1,12 @@
 <script>
 	import { add_attribute, getContext } from 'svelte/internal';
 	import { API_URL, authfetch, imageIdToUrl } from '../../../../api.js';
-	import LocationView from '../../../../components/location/LocationView.svelte';
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
 	import PrimaryButton from '../../../../components/button/PrimaryButton.svelte';
 	import { goto } from '$app/navigation';
 	import { CATEGORIES } from '../../../../stores.js';
-
+	import ThreeDMap from '../../../../components/location3d/ThreeDMap.svelte';
+	import PlainLocation from './PlainLocation.svelte';
     const open = getContext('menu-context');
 
 
@@ -22,16 +22,8 @@
         location.href = "/dashboard";
     }
 
-    let tree = {
-        x: 0,
-        y: 0,
-        width: 100,
-        height: Math.max(...data.tree.map(a => a.y + a.height), 100),
-        name: "인벤토리 시스템",
-        children: data.tree
-    }
-    tree = injectParentLink(tree);
-
+    let tree = searchId(injectParentLink({name: "inv system", children: data.tree}), "0");
+    
     $: {
         selectedItem = undefined; data.product.id;
     }
@@ -61,7 +53,6 @@
             routeIds = [theelement.id, ...routeIds];
             theelement = theelement.parent;
         }
-        route = [theelement, ...route];
 
         location = route.length - 2;
         setupViewOfParent(route[location]);
@@ -77,15 +68,20 @@
     }
     const setupViewOfParent = (parentItem) => {
         visibleTree = {
-            x: 0,
-            y: 0,
-            width: 100,
-            height: 100,
             name: parentItem.name,
             children: parentItem.children,
             parent: parentItem.parent,
             id: parentItem.id,
-            original: parentItem
+            original: parentItem,
+            metadata: {
+                ...parentItem.metadata,
+                x: 0,
+                y: 0,
+                z: 0,
+                rx: 0,
+                ry: 0,
+                rz: 0
+            }
         }
     }
 
@@ -149,26 +145,9 @@
     </div>
     {#if selectedItem !== undefined}
         <div class="relative">
-            <LocationView tree={visibleTree} movable={false} parentId={null} editing={false}>
-                <slot slot="background" let:tree>
-                    <div class:hovered={hoveredItem != null && hoveredItem?.locationId == tree?.id}
-                    class:selected = {selectedItem != null && selectedItem?.locationId == tree?.id}
-                    class="background" class:onroute = {routeIds.includes(tree.id)}>
-                
-                        <div class="title"
-                            class:hovered={hoveredItem != undefined && hoveredItem?.locationId == tree?.id}
-                            class:selected={selectedItem?.locationId == tree?.id}>
-                                <span>{tree.name}</span>
-                                <!-- {#if movable && editing}
-                                    <button on:click={rename}>rename</button>
-                                {/if}
-                                {#if movable && editing && tree.children.length == 0}
-                                    <button on:click={doDelete}>delete</button>
-                            {/if} -->
-                        </div>
-                    </div>
-                </slot>
-            </LocationView>
+            <ThreeDMap locations={visibleTree}>
+                <PlainLocation realLocation={visibleTree} depth={3} hovered={hoveredItem?.locationId} selected={selectedItem?.locationId} onroute={routeIds.slice(location+1)}/>
+            </ThreeDMap>
             <div class="controls">
                 <div class="controls-top">
                     {#if innerWidth < 700}

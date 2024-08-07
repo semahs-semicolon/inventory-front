@@ -47,7 +47,6 @@
             src = URL.createObjectURL(file[0]);
 
 
-            console.log(file);
             fileupload = new Promise((resolve, err) => {
                 const formData = new FormData();
                 formData.append("image", file[0]);
