@@ -1,7 +1,6 @@
 <script>
 	import { add_attribute, getContext } from 'svelte/internal';
 	import { API_URL, authfetch, imageIdToUrl } from '../../../../api.js';
-	import LocationView from '../../../../components/location/LocationView.svelte';
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
 	import PrimaryButton from '../../../../components/button/PrimaryButton.svelte';
 	import { goto } from '$app/navigation';
@@ -146,22 +145,8 @@
     </div>
     {#if selectedItem !== undefined}
         <div class="relative">
-            <!-- <LocationView tree={visibleTree} movable={false} parentId={null} editing={false}>
-                <slot slot="background" let:tree>
-                    <div class:hovered={hoveredItem != null && hoveredItem?.locationId == tree?.id}
-                    class:selected = {selectedItem != null && selectedItem?.locationId == tree?.id}
-                    class="background" class:onroute = {routeIds.includes(tree.id)}>
-                
-                        <div class="title"
-                            class:hovered={hoveredItem != undefined && hoveredItem?.locationId == tree?.id}
-                            class:selected={selectedItem?.locationId == tree?.id}>
-                                <span>{tree.name}</span>
-                        </div>
-                    </div>
-                </slot>
-            </LocationView> -->
             <ThreeDMap locations={visibleTree}>
-                <PlainLocation realLocation={visibleTree} depth={2} hovered={hoveredItem?.locationId} selected={selectedItem?.locationId} onroute={routeIds.slice(location+1)}/>
+                <PlainLocation realLocation={visibleTree} depth={3} hovered={hoveredItem?.locationId} selected={selectedItem?.locationId} onroute={routeIds.slice(location+1)}/>
             </ThreeDMap>
             <div class="controls">
                 <div class="controls-top">

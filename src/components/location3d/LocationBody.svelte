@@ -1,10 +1,8 @@
 <script>
-    import LocationView from "../location/LocationView.svelte";
     import { API_URL, authfetch } from '../../api';
 	import TreeView from "../TreeView.svelte";
 	import Products from "../product/Products.svelte";
 	import Items from "../item/Items.svelte";
-	import EditableGenericLocationView from "../location/EditableGenericLocationView.svelte";
 	import Product from "../product/Product.svelte";
 	import { fly } from "svelte/transition";
 	import SecondaryButton from "../button/SecondaryButton.svelte";
@@ -25,6 +23,66 @@
     let treeShow = false;
     let toolbarShow = false;
 
+    const create = async (tree) => {
+        const name = prompt("name?");
+        const res = await authfetch(`${API_URL()}/locations`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                name: name,
+                parent: tree.id,
+                metadata: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                    rx: 0,
+                    ry: 0,
+                    rz: 0,
+                    width: 10,
+                    height: 10
+                }
+            })
+        });
+        const json = await res.json();
+        tree.children = [...tree.children, {...json, children: [], parent: tree}];
+
+        fullTree = fullTree;
+        rootTree = rootTree;
+    }
+    const rename = async (tree) => {
+        const name = prompt("name?");
+        if (name == null) return;
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}/name`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                name: name
+            })
+        });
+        const json = await res.json();
+        tree.name = name;
+
+        fullTree = fullTree;
+        rootTree = rootTree;
+    }
+
+    const doDelete = async (tree) => {
+        if (!confirm("you sure?")) return;
+        const res = await authfetch(`${API_URL()}/locations/${tree.id}`, {
+            method: "DELETE"
+        });
+        if (res.status !== 200)
+            alert(await res.text());
+        else
+            tree.parent.children = tree.parent.children.filter(elem => elem.id !== tree.id);
+
+        fullTree = fullTree;
+        rootTree = rootTree;
+    }
 </script>
 
 
@@ -70,9 +128,6 @@
     <ThreeDMap locations={rootTree} on:selection={(ev) => {selectedLocation = ev.detail;}}>
         <PlainLocation bind:realLocation={rootTree} depth={3} hovered={hoveredLocation?.id} selected={selectedLocation?.id} on:selection={(ev) => {selectedLocation = ev.detail;}}/>
     </ThreeDMap>
-    <!-- <EditableGenericLocationView bind:selectedLocation bind:hoveredLocation bind:rootTree>
-        
-    </EditableGenericLocationView> -->
     <div class="collapsibleControl">
         <SecondaryButton class=".toolbar" on:click={() => treeShow = !treeShow}> 위치 트리 </SecondaryButton>
         {#if innerWidth < 700}
