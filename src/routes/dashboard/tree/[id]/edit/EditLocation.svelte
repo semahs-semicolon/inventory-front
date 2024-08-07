@@ -88,7 +88,7 @@
     let progressF1 = writable(undefined);
     let progressF2 = writable(undefined);
 
-    $: {
+    const uploadF1 = () => {
         if (externalFile != undefined) {
             fileupload1 = uploadFile(externalFile[0], progressF1)
                 .then(res => {
@@ -98,8 +98,7 @@
                 });
         }
     }
-    $: {
-
+    const uploadF2 = () => {
         if (internalFile != undefined) {
             fileupload2 = uploadFile(internalFile[0], progressF2)
                 .then(res => {
@@ -181,13 +180,13 @@
                 <progress value={$progressF1} max="100"/>
             {/if}
             <span>외부 구조물: {realLocation.metadata.external}</span>
-            <span>외부 구조물 업로딩: <input type="file" bind:files={externalFile} accept=".gltf"/></span>
+            <span>외부 구조물 업로딩: <input type="file" bind:files={externalFile} accept=".gltf,.glb" on:change={uploadF1}/></span>
             {#if $progressF2 != undefined}
                 <span class="progress">모델 업로딩중... {$progressF2}%</span>
                 <progress value={$progressF2} max="100"/>
             {/if}
             <span>내부 구조물: {realLocation.metadata.internal}</span>
-            <span>내부 구조물 업로딩: <input type="file" bind:files={internalFile}  accept=".gltf"/></span>
+            <span>내부 구조물 업로딩: <input type="file" bind:files={internalFile}  accept=".gltf,.glb" on:change={uploadF2}/></span>
             
             <span>실험 해보기: <input type="file" bind:files={testFile}/> <PrimaryButton on:click={() => testFile = undefined}>clear</PrimaryButton></span>
         </div>
