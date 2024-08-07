@@ -150,7 +150,7 @@
             </ThreeDMap>
             <div class="controls">
                 <div class="controls-top">
-                    {#if innerWidth < 700}
+                    {#if innerWidth < 1250}
                         <PrimaryButton on:click={() => selectedItem=undefined}>창 종료</PrimaryButton>
                     {/if}
                     {#if location > 0}
@@ -345,12 +345,12 @@
     }
     .relative {
         position: relative;
-        flex: 1;
-        max-width: 700px;
+        flex: 2;
+        max-width: 1250px;
         overflow: auto;
     }
 
-    @media(max-width: 700px) {
+    @media(max-width: 1250px) {
         .relative {
             position: absolute;
             top: 0;

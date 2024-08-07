@@ -16,7 +16,7 @@
     export let rootTree;
     export let fullTree;
 
-    let innerWidth = 10000, innerHeight = 10000;
+    let innerWidth = 15000, innerHeight = 15000;
 
     let selectedLocation, hoveredLocation;
 
@@ -89,7 +89,7 @@
 <svelte:window bind:innerWidth bind:innerHeight />
 
 <div class="body">
-    {#if innerWidth >= 1000 || treeShow}
+    {#if innerWidth >= 1500 || treeShow}
         <div class="tree" class:showHidden={treeShow} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
             <TreeView tree={fullTree} interact={true}>
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -122,7 +122,7 @@
             </TreeView>
         </div>
     {/if}
-    {#if (treeShow&& innerWidth < 1000 || toolbarShow&& innerWidth < 700) } 
+    {#if (treeShow&& innerWidth < 1500 || toolbarShow&& innerWidth < 1000) } 
         <div class="darkbg"/>
     {/if}
     <ThreeDMap locations={rootTree} on:selection={(ev) => {selectedLocation = ev.detail;}}>
@@ -130,11 +130,11 @@
     </ThreeDMap>
     <div class="collapsibleControl">
         <SecondaryButton class=".toolbar" on:click={() => treeShow = !treeShow}> 위치 트리 </SecondaryButton>
-        {#if innerWidth < 700}
+        {#if innerWidth < 1000}
             <SecondaryButton on:click={() => toolbarShow = !toolbarShow} disabled={selectedLocation == undefined}>물품 관리</SecondaryButton>
         {/if}
     </div>
-    {#if innerWidth >= 700 || toolbarShow}
+    {#if innerWidth >= 1000 || toolbarShow}
         <div class="products" class:showHidden={toolbarShow}  transition:fly={{duration: 250, x: '100%', opacity: 1}}>
             {#if toolbarShow}
             <div class="toolbarClose">
@@ -142,7 +142,7 @@
             </div>
             {/if}
             <Items location={selectedLocation}/>
-            <Products fullscreen={toolbarShow && innerWidth < 700}>
+            <Products fullscreen={toolbarShow && innerWidth < 1000}>
                 <slot slot="product" let:product>
                     <Product {product} draggable={true} on:dblclick={async (e) => {
                         if (selectedLocation.id == undefined) return;
@@ -270,12 +270,12 @@
         display: flex;
         align-items: stretch;
     }
-    @media(min-width: 1000px) {
+    @media(min-width: 1500px) {
         .tree {
             display: flex;
         }
     }
-    @media(max-width: 1000px) {
+    @media(max-width: 1500px) {
         .tree {
             position: absolute;
             top: 0;
@@ -295,12 +295,12 @@
         }
     }
 
-    @media(min-width: 700px) {
+    @media(min-width: 1000px) {
         .products {
             display: flex;
         }
     }
-    @media(max-width: 700px) {
+    @media(max-width: 1000px) {
         .products {
             position: absolute;
             top: 0;
