@@ -33,7 +33,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - name: deploy to s3
         run: |
-          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/
+          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/ --delete
   deploy_to_production:
     runs-on: ubuntu-latest
     environment: production
@@ -60,4 +60,4 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - name: deploy to s3
         run: |
-          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/
+          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/ --delete
