@@ -6,6 +6,7 @@
 	import { goto } from "$app/navigation";
 	import { modelIdToUrl } from "../../api";
 	import { GLTF } from "@threlte/extras";
+    import { CustomBlending } from "three";
 
     export let realLocation;
     export let hovered;
@@ -15,6 +16,37 @@
 
     let evDispatcher = createEventDispatcher();
 
+
+    let materials;
+    $: (realLocation.id), (() => {
+        materials = null;
+        originalMaterialColor = null;
+    })()
+
+    let originalMaterialColor = null;
+    $: {
+        if (materials != null) {
+            if (originalMaterialColor == undefined) {
+                originalMaterialColor = {}
+                for (const [k,mat] of Object.entries(materials)) {
+                    originalMaterialColor[k] = mat.color.clone();
+                }
+            }
+            if (hovered == realLocation.id) {
+                for (const mat of Object.values(materials)) {
+                    mat.color.setHex(0xb2ce79);
+                }
+            } else if (selected == realLocation.id) {
+                for (const mat of Object.values(materials)) {
+                    mat.color.setHex(0x69aeae);
+                }
+            } else {
+                for (const [k, mat] of Object.entries(originalMaterialColor)) {
+                    materials[k].color = mat.clone();
+                }
+            }
+        }
+    }
 </script>
 <T.Mesh
     position.x = {realLocation.metadata.x} position.y = {realLocation.metadata.z} position.z = {realLocation.metadata.y}
@@ -27,11 +59,11 @@
         }>
         {#if isRoot}
             {#if realLocation.metadata.internal}
-                <GLTF url={modelIdToUrl(realLocation.metadata.internal)}/>
+                <GLTF url={modelIdToUrl(realLocation.metadata.internal)}  bind:materials={materials}/>
             {/if}
         {:else}
             {#if realLocation.metadata.external}
-                <GLTF url={modelIdToUrl(realLocation.metadata.external)}/>
+                <GLTF url={modelIdToUrl(realLocation.metadata.external)}  bind:materials={materials}/>
             {/if}
         {/if}
         
