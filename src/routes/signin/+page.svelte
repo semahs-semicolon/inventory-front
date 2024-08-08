@@ -17,13 +17,11 @@
 			},
 			body: JSON.stringify({
 				username: username,
-				password: password,
-				token: turnstileToken
+				password: password
 			})
 		});
-		if (resp.status == 200) {
-			const token = await resp.text();
-			$ACCESS_TOKEN = token;
+		if (resp.status === 200) {
+			$ACCESS_TOKEN = await resp.text();
 
 			location.href = '/dashboard';
 		} else {
@@ -42,13 +40,13 @@
 			<input
 				type="text"
 				placeholder="아이디"
-				value={username}
+				bind:value={username}
 				class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0"
 			/>
 			<input
 				type="password"
 				placeholder="패스워드"
-				value={password}
+				bind:value={password}
 				class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0"
 			/>
 		</div>
@@ -60,6 +58,9 @@
 			>
 			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/"
 				>게스트 계정으로 로그인</a
+			>
+			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/"
+				>계정이 없으십니까?</a
 			>
 		</div>
 		<Turnstile on:token={onToken} />

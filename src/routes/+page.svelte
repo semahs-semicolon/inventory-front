@@ -28,7 +28,7 @@
 <div class="flex h-full w-full items-center justify-center font-medium">
 	<div class="flex flex-col items-center gap-10">
 		<span class="material-symbols-outlined text-9xl">category_search</span>
-		<div class="flex w-full flex-col items-center justify-center gap-2">
+		<div class="flex flex-col items-center justify-center gap-2">
 			<span class="text-2xl font-semibold text-[#0060B7]">세마고등학교</span>
 			<span class="text-4xl font-semibold">과학실 물품 관리 시스템</span>
 		</div>
