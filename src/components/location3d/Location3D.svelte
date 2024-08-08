@@ -31,7 +31,7 @@
 </script>
 
 {#if location.id != 0 || forceRender}
-    <Text text={location.name} position.x = {0} position.z = {location.metadata.height} position.y = {Math.min((location.metadata.width-1) / location.name.length * 1.2, 15) + 1} fontSize={Math.min((location.metadata.width - 1) / location.name.length * 1.2, 15)} color="black"/>
+    <Text text={location.name} position.x = {0} position.z = {location.metadata.height + 0.01} position.y = {Math.min((location.metadata.width-1) / location.name.length * 1.2, 15) + 1} fontSize={Math.min((location.metadata.width - 1) / location.name.length * 1.2, 15)} color="black"/>
 {/if}
 <T.Mesh on:click={(ev) => { ev.stopPropagation(); dispatcher('click', ev.detail)}}  on:pointerenter={onPointerEnter} on:pointerleave={onPointerLeave}
         on:dblclick={(ev) => { ev.stopPropagation(); dispatcher('dblclick', ev.detail)}}>
