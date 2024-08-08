@@ -17,11 +17,13 @@
     let evDispatcher = createEventDispatcher();
 
 
-    let materials;
-    $: (realLocation.id), (() => {
-        materials = null;
-        originalMaterialColor = null;
-    })()
+    let materials = null;
+    // $: (realLocation?.id), (() => {
+    //     if (materials != null) {
+    //         materials = null;
+    //         originalMaterialColor = null;
+    //     }
+    // })()
 
     let originalMaterialColor = null;
     $: {
@@ -66,7 +68,7 @@
 
         {#if isRoot}
             {#if realLocation.metadata.internal}
-                <GLTF url={modelIdToUrl(realLocation.metadata.internal)} bind:materials/>
+                <GLTF url={modelIdToUrl(realLocation.metadata.internal)} bind:materials />
             {/if}
         {:else}
             {#if realLocation.metadata.external}
@@ -78,8 +80,8 @@
 
     <T.Mesh position.y={0.1}>
         {#if depth > 1}
-            {#each realLocation.children as child}
-                <svelte:self bind:realLocation={child} id={child.id} depth={depth-1} on:selection {hovered} {selected} {onroute} isRoot={false}/>
+            {#each realLocation.children as child (child.id)}
+                <svelte:self bind:realLocation={child} depth={depth-1} on:selection {hovered} {selected} {onroute} isRoot={false}/>
             {/each}
         {/if}
     </T.Mesh>

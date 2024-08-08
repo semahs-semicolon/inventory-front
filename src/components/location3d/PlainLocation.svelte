@@ -17,11 +17,7 @@
     let evDispatcher = createEventDispatcher();
 
 
-    let materials;
-    $: (realLocation.id), (() => {
-        materials = null;
-        originalMaterialColor = null;
-    })()
+    let materials = null;
 
     let originalMaterialColor = null;
     $: {
@@ -72,7 +68,7 @@
 
     <T.Mesh position.y={0.1}>
         {#if depth > 1}
-            {#each realLocation.children as child}
+            {#each realLocation.children as child (child.id)}
                 <svelte:self bind:realLocation={child} id={child.id} depth={depth-1} on:selection {hovered} {selected} isRoot={false}/>
             {/each}
         {/if}
