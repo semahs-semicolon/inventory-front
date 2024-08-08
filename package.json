@@ -27,11 +27,18 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-static": "^3.0.0",
+		"@threlte/core": "^7.3.1",
+		"@threlte/extras": "^8.11.5",
+		"@threlte/gltf": "^2.0.3",
 		"mobile-drag-drop": "^3.0.0-rc.0",
 		"prettier": "^3.0.0",
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.6.5",
 		"svelte-infinite-scroll": "^2.0.1",
-		"svelte-turnstile": "^0.7.1"
+		"svelte-turnstile": "^0.7.1",
+		"postprocessing": "^6.36.0",
+		"svelte-infinite-scroll": "^2.0.1",
+		"svelte-portal": "^2.2.1",
+		"three": "^0.167.1"
 	}
 }

@@ -3,18 +3,6 @@
 	import PrimaryButton from "../../../components/button/PrimaryButton.svelte";
 	import Footer from "../../../components/Footer.svelte";
 
-
-    const download = () => {
-        console.log("EXPORT")
-        authfetch(`${API_URL()}/export`, {
-                method: "GET"
-            })
-            .then(res => res.blob())
-            .then(blob => {
-                var file = window.URL.createObjectURL(blob);
-                window.location.assign(file);
-            })
-    }
 </script>
 
 <div class="tall">

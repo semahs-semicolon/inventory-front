@@ -8,9 +8,9 @@ permissions:
   contents: read
 
 jobs:
-  setup_build_env:
+  deploy_to_staging:
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js 20.x
@@ -33,4 +33,25 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
       - name: deploy to s3
         run: |
-          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/
+          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/ --delete
+  deploy_to_production:
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [deploy_to_staging]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          role-session-name: samplerolesession
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: deploy to s3
+        run: |
+          aws s3 sync build/ s3://${{ vars.BUCKET_NAME }}/ --delete

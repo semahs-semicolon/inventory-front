@@ -1,10 +1,8 @@
 <script>
-    import LocationView from "./LocationView.svelte";
     import { API_URL, authfetch } from '../../api';
 	import TreeView from "../TreeView.svelte";
 	import Products from "../product/Products.svelte";
 	import Items from "../item/Items.svelte";
-	import EditableGenericLocationView from "./EditableGenericLocationView.svelte";
 	import Product from "../product/Product.svelte";
 	import { fly } from "svelte/transition";
 	import SecondaryButton from "../button/SecondaryButton.svelte";
@@ -12,19 +10,18 @@
 	import { goto } from "$app/navigation";
 	import PrimaryButton from "../button/PrimaryButton.svelte";
 	import ContextMenu from "../ContextMenu.svelte";
+    import ThreeDMap from './ThreeDMap.svelte';
+	import PlainLocation from "./PlainLocation.svelte";
 
     export let rootTree;
     export let fullTree;
 
-    export let selectedLocation;
-    export let hoveredLocation;
+    let innerWidth = 15000, innerHeight = 15000;
+
+    let selectedLocation, hoveredLocation;
 
     let treeShow = false;
     let toolbarShow = false;
-
-    let innerWidth = 10000;
-    let innerHeight = 10000;
-
 
     const create = async (tree) => {
         const name = prompt("name?");
@@ -35,11 +32,17 @@
             },
             body: JSON.stringify({
                 name: name,
-                x: 0,
-                y: 0,
-                width: 30,
-                height: 30,
-                parent: tree.id
+                parent: tree.id,
+                metadata: {
+                    x: 0,
+                    y: 0,
+                    z: 0,
+                    rx: 0,
+                    ry: 0,
+                    rz: 0,
+                    width: 10,
+                    height: 10
+                }
             })
         });
         const json = await res.json();
@@ -85,97 +88,70 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="flex h-full flex-1 content-center justify-between py-5">
-	{#if innerWidth >= 1000 || treeShow}
-		<div
-			class="tree"
-			class:showHidden={treeShow}
-			transition:fly={{ duration: 250, x: '-100%', opacity: 1 }}
-		>
-			<TreeView tree={fullTree} interact={true}>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div slot="title" class="tree-title-container">
-					<div class="flex items-center gap-3 text-base">
-						<span class="text-lg font-medium"> 위치 나무 </span>
-						<PrimaryButton on:click={() => goto('/dashboard')}>루트로</PrimaryButton>
-					</div>
-					{#if treeShow}
-						<CloseButton on:click={() => (treeShow = false)} />
-					{/if}
-				</div>
-				<ContextMenu slot="element" let:element>
-					<div slot="menu" class="menu">
-						<span>{element?.name}</span>
-						<hr />
-						<PrimaryButton on:click={() => create(element)}>새로 위치 만들기</PrimaryButton>
-						<PrimaryButton on:click={() => rename(element)}>이름 바꾸기</PrimaryButton>
-						<PrimaryButton on:click={() => doDelete(element)}>삭제하기</PrimaryButton>
-					</div>
-					<span
-						class:hovered={hoveredLocation?.id == element?.id}
-						class:selected={selectedLocation?.id == element?.id}
-						on:mouseenter={() => (hoveredLocation = element)}
-						on:mouseleave={() => (hoveredLocation = null)}
-						class="tree-element"
-						on:click={() => {
-							goto(`/dashboard/tree/${element.id}`);
-							treeShow = false;
-						}}
-					>
-						{element?.name}
-					</span>
-				</ContextMenu>
-			</TreeView>
-		</div>
-	{/if}
-	{#if (treeShow && innerWidth < 1000) || (toolbarShow && innerWidth < 700)}
-		<div class="darkbg" />
-	{/if}
-	<EditableGenericLocationView bind:selectedLocation bind:hoveredLocation bind:rootTree>
-		<div class="collapsibleControl">
-			<SecondaryButton class=".toolbar" on:click={() => (treeShow = !treeShow)}>
-				위치 트리
-			</SecondaryButton>
-			{#if innerWidth < 700}
-				<SecondaryButton
-					on:click={() => (toolbarShow = !toolbarShow)}
-					disabled={selectedLocation == undefined}>물품 관리</SecondaryButton
-				>
-			{/if}
-		</div>
-	</EditableGenericLocationView>
-	{#if innerWidth >= 700 || toolbarShow}
-		<div
-			class="products"
-			class:showHidden={toolbarShow}
-			transition:fly={{ duration: 250, x: '100%', opacity: 1 }}
-		>
-			{#if toolbarShow}
-				<div class="toolbarClose">
-					<CloseButton
-						on:click={() => {
-							toolbarShow = false;
-						}}
-					/>
-				</div>
-			{/if}
-			<Items location={selectedLocation} />
-			<Products fullscreen={toolbarShow && innerWidth < 700}>
-				<slot slot="product" let:product>
-					<Product
-						{product}
-						draggable={true}
-						on:dblclick={async (e) => {
-							if (selectedLocation.id == undefined) return;
-							window.dispatchEvent(
-								new CustomEvent('current-location-item-update', { detail: { id: product.id } })
-							);
-						}}
-					/>
-				</slot>
-			</Products>
-		</div>
-	{/if}
+<div class="body">
+    {#if innerWidth >= 1500 || treeShow}
+        <div class="tree" class:showHidden={treeShow} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
+            <TreeView tree={fullTree} interact={true}>
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div slot="title" class="tree-title-container">
+                    <span class="tree-title">위치 나무
+                        <PrimaryButton on:click={() => goto("/dashboard/tree/0")}>루트로</PrimaryButton>
+                    </span>
+                    {#if treeShow}
+                        <CloseButton on:click={() => treeShow=false}/>
+                    {/if}
+                </div>
+                <ContextMenu slot="element" let:element>
+                    <div slot="menu" class="menu" >
+                        <span>{element?.name}</span>
+                        <hr/>
+                        <PrimaryButton on:click={() => create(element)}>새로 위치 만들기</PrimaryButton>
+                        <PrimaryButton on:click={() => rename(element)}>이름 바꾸기</PrimaryButton>
+                        <PrimaryButton on:click={() => goto(`/dashboard/tree/${element.id}/edit`)}>편집하기</PrimaryButton>
+                        <PrimaryButton on:click={() => doDelete(element)}>삭제하기</PrimaryButton>
+                    </div>
+                    <span
+                        class:hovered={hoveredLocation?.id == element?.id}
+                        class:selected={selectedLocation?.id == element?.id}
+                        on:mouseenter={() => hoveredLocation = element}
+                        on:mouseleave={() => hoveredLocation = null}
+                        class="tree-element" on:click={() => {goto(`/dashboard/tree/${element.id}`); treeShow=false;}}>
+                        {element?.name}
+                    </span>
+                </ContextMenu>
+            </TreeView>
+        </div>
+    {/if}
+    {#if (treeShow&& innerWidth < 1500 || toolbarShow&& innerWidth < 1000) }
+        <div class="darkbg"/>
+    {/if}
+    <ThreeDMap locations={rootTree} on:selection={(ev) => {selectedLocation = ev.detail;}}>
+        <PlainLocation isRoot={true}  bind:realLocation={rootTree} depth={3} hovered={hoveredLocation?.id} selected={selectedLocation?.id} on:selection={(ev) => {selectedLocation = ev.detail;}}/>
+    </ThreeDMap>
+    <div class="collapsibleControl">
+        <SecondaryButton class=".toolbar" on:click={() => treeShow = !treeShow}> 위치 트리 </SecondaryButton>
+        {#if innerWidth < 1000}
+            <SecondaryButton on:click={() => toolbarShow = !toolbarShow} disabled={selectedLocation == undefined}>물품 관리</SecondaryButton>
+        {/if}
+    </div>
+    {#if innerWidth >= 1000 || toolbarShow}
+        <div class="products" class:showHidden={toolbarShow}  transition:fly={{duration: 250, x: '100%', opacity: 1}}>
+            {#if toolbarShow}
+            <div class="toolbarClose">
+                <CloseButton on:click={() => {toolbarShow=false;}}/>
+            </div>
+            {/if}
+            <Items location={selectedLocation}/>
+            <Products fullscreen={toolbarShow && innerWidth < 1000}>
+                <slot slot="product" let:product>
+                    <Product {product} draggable={true} on:dblclick={async (e) => {
+                        if (selectedLocation.id == undefined) return;
+                        window.dispatchEvent(new CustomEvent("current-location-item-update", {detail: {id: product.id}}))
+                    }}/>
+                </slot>
+            </Products>
+        </div>
+    {/if}
 </div>
 
 <style>
@@ -294,12 +270,12 @@
         display: flex;
         align-items: stretch;
     }
-    @media(min-width: 1000px) {
+    @media(min-width: 1500px) {
         .tree {
             display: flex;
         }
     }
-    @media(max-width: 1000px) {
+    @media(max-width: 1500px) {
         .tree {
             position: absolute;
             top: 0;
@@ -315,14 +291,16 @@
         .collapsibleControl {
             display: flex;
             position: absolute;
+            right: 25em;
         }
     }
-    @media(min-width: 700px) {
+
+    @media(min-width: 1000px) {
         .products {
             display: flex;
         }
     }
-    @media(max-width: 700px) {
+    @media(max-width: 1000px) {
         .products {
             position: absolute;
             top: 0;
@@ -330,6 +308,11 @@
             z-index: 40;
             max-width: 92vw;
             min-width: 92vw;
+        }
+        .collapsibleControl {
+            display: flex;
+            position: absolute;
+            right: 0em;
         }
     }
 </style>

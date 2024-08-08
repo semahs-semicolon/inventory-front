@@ -2,7 +2,6 @@
 	import CategorySelector from "../CategorySelector.svelte";
 
     export let data;
-    console.log(data);
 </script>
 
 <div class="wrapper">

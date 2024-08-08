@@ -9,7 +9,6 @@
         ev.preventDefault();
         x = ev.pageX;
         y = ev.pageY;
-        console.log(ev);
 
         $popup = {
             x: x,

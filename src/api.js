@@ -3,7 +3,7 @@ import { ACCESS_TOKEN } from "./stores";
 
 import { dev } from '$app/environment';
 
-export const API_URL = () => `https://${dev ? 'inventory.seda.club' : location.hostname}/api`;
+export const API_URL = () => `https://${dev ? 'staging.inventory.seda.club' : location.hostname}/api`;
 // export const API_URL = () => `http://127.0.0.1:8080`
 // export const API_URL = () => "https://internal.inventory.seda.club/api"
 // export const API_URL = "http://192.168.219.100/panel/api"
@@ -31,6 +31,10 @@ export function authfetch(input, init={method: 'GET', headers: {}}) {
 // }
 
 export function imageIdToUrl(id, options = "200,fit,jpeg") {
-    return `https://${dev ? 'inventory.seda.club' : location.hostname}/scaled/${options}/${id}`;
+    return `https://${dev ? 'staging.inventory.seda.club' : location.hostname}/scaled/${options}/${id}`;
+    // return `https://s4.cloud.seda.club/swift/v1/AUTH_7913d9d4f87343c28de59cf00a57ef44/images/${id}`
+}
+export function modelIdToUrl(id) {
+    return `https://${dev ? 'staging.inventory.seda.club' : location.hostname}/image/${id}`;
     // return `https://s4.cloud.seda.club/swift/v1/AUTH_7913d9d4f87343c28de59cf00a57ef44/images/${id}`
 }
