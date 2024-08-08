@@ -18,6 +18,10 @@
 
 
     let materials;
+    $: (realLocation.id), (() => {
+        materials = null;
+        originalMaterialColor = null;
+    })()
 
     let originalMaterialColor = null;
     $: {
