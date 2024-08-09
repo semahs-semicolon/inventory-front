@@ -1,7 +1,7 @@
 <script>
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-
+	import '../app.css';
 	const popup = writable(undefined);
 	setContext('popup', popup);
 
