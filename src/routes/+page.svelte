@@ -5,7 +5,7 @@
 	import '../tailwind.css';
 	let turnstileToken;
 	const onToken = (token) => {
-		turnstileToken = token;
+		turnstileToken = token.detail;
 	};
 	const guestLogin = async () => {
 		if (turnstileToken !== null) {
