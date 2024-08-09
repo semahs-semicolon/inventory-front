@@ -1,7 +1,7 @@
 <script>
 	import { API_URL } from '../../api';
 	import { ACCESS_TOKEN } from '../../stores';
-
+	import '../tailwind.css';
 	let username = '',
 		password = '',
 		nickname = '';
