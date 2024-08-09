@@ -2,7 +2,7 @@
 	import { API_URL } from '../api';
 	import Turnstile from '../components/Turnstile.svelte';
 	import { ACCESS_TOKEN } from '../stores.js';
-
+	import '../tailwind.css';
 	let turnstileToken;
 	const onToken = (token) => {
 		turnstileToken = token;
