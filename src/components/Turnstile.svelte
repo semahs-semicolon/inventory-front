@@ -5,7 +5,7 @@
 
 	const dispatch = createEventDispatcher();
 	const callback = (turnstile) => {
-		dispatch('token', turnstile.token);
+		dispatch('token', turnstile.detail.token);
 	};
 </script>
 
