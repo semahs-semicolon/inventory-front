@@ -7,17 +7,17 @@
 
 </script>
 
-<div class="flex h-full flex-1 flex-col rounded-lg bg-gray-200">
-	<slot name="title">
-		<span class="tree-title">위치 나무</span>
-	</slot>
-	<div class="tree-contents">
-		{#each tree.children as element}
-			<TreeElement {element} {interact}>
-				<slot name="element" slot="element" let:element {element} />
-			</TreeElement>
-		{/each}
-	</div>
+<div class="tree">
+    <slot name="title">
+        <span class="tree-title">위치 나무</span>
+    </slot>
+    <div class="tree-contents">
+        {#each tree.children as element}
+            <TreeElement element={element} interact={interact} >
+                <slot name="element" slot="element" let:element element={element}/>
+            </TreeElement>
+        {/each}
+    </div>
 </div>
 
 <style>

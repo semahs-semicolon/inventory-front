@@ -23,7 +23,7 @@
     }
 
     let tree = searchId(injectParentLink({name: "inv system", children: data.tree}), "0");
-
+    
     $: {
         selectedItem = undefined; data.product.id;
     }
@@ -92,7 +92,7 @@
         return getCategoryName(category.parentCategoryId) + " > " + category.name;
     }
 
-
+    
     let selectedItem, hoveredItem;
     let innerHeight, innerWidth;
 </script>
@@ -113,7 +113,7 @@
         <hr/>
         <div class="real-content">
             <img class="image" src={imageIdToUrl(data.product.primaryImage,  `webp`)}/>
-            <div class="right">
+            <div class="right"> 
                 <div class="content-header">
                     <h1>{data.product.name}</h1>
                     <PrimaryButton on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)}>수정하기</PrimaryButton>
@@ -130,7 +130,7 @@
             <p>총 {data.items.map(a => a.count).reduce((partialSum, a) => partialSum + a, 0)}개가 {data.items.length}곳에 저장되어 있습니다</p>
             <div class="storage-list">
                 {#each data.items as item}
-                    <span class="item"
+                    <span class="item" 
                         class:item-selected = {selectedItem == item}
                         on:click={() => {if (selectedItem != item) {selectedItem=item; setupTreeView();} else {selectedItem = undefined }}}
                         on:mouseenter={() => hoveredItem=item}
@@ -163,7 +163,7 @@
                 </div>
                 <span class="route">
                     {#each route as segment}
-                        <span class="segment" class:segment-selected={segment.id == visibleTree.id}>{segment.name}</span>
+                        <span class="segment" class:segment-selected={segment.id == visibleTree.id}>{segment.name}</span> 
                         {#if segment !== route[route.length-1]} &gt; {/if}
                     {/each}
                 </span>
@@ -226,7 +226,7 @@
     .onroute {
         background-color: #5a83251A;
     }
-    .segment-selected {
+    .segment-selected { 
         background-color: #4d9de770 !important;
     }
     .title > span {

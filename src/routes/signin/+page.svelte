@@ -1,11 +1,6 @@
 <script>
 	import { API_URL } from '../../api';
 	import { ACCESS_TOKEN } from '../../stores';
-	import Turnstile from '../../components/Turnstile.svelte';
-	let turnstileToken;
-	const onToken = (token) => {
-		turnstileToken = token;
-	};
 	let username = '',
 		password = '';
 
@@ -59,10 +54,9 @@
 			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/"
 				>게스트 계정으로 로그인</a
 			>
-			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/"
+			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/signup"
 				>계정이 없으십니까?</a
 			>
 		</div>
-		<Turnstile on:token={onToken} />
 	</div>
 </div>

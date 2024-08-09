@@ -58,20 +58,24 @@
 <svelte:window on:current-location-item-update={(e) => {  changeCount(e.detail.id) }}/>
 
 
-<div class="flex flex-1 flex-col rounded-lg border-4 border-gray-300">
-	{#if location?.id == undefined}
-		<div class="flex p-2 px-4 text-lg font-medium">
-			<span>물품</span>
-		</div>
-		<div class="content">
-			<h3>위치를 선택하세요</h3>
-		</div>
-	{:else}
-		<div class="flex items-center gap-3 p-2 px-4 text-lg font-medium">
-			<span>물품 목록: {location.name} ({location.id})</span>
-			<span class="text-base font-normal">드래그/더블클릭 통해 추가</span>
-		</div>
-		<hr />
+{#if location?.id == undefined}
+    <div class="products">
+        <div class="header">
+            <span>물품</span>
+        </div>
+        <hr/>
+
+        <div class="content">
+            <h3>위치를 선택하세요</h3>
+        </div>
+    </div>
+{:else}
+    <div class="products">
+        <div class="header">
+            <span>물품 목록:  {location.name} ({location.id})</span>
+            <span>드래그/더블클릭 통해 추가</span>
+        </div>
+        <hr/>
 
         <div class="content" on:drop={(e) => {
             e.preventDefault();
@@ -95,7 +99,7 @@
                 {#each itemList as item}
                     <slot item={item}>
                         <span class="item" on:click={() => changeCount(item.product.id)}>
-                            <span>{item.count}x</span>
+                            <span>{item.count}x</span> 
                             {#if item.product.primaryImage == null}
                             <div class="box image">
                                 X
@@ -103,7 +107,7 @@
                             {:else}
                             <img class="image" src={imageIdToUrl(item.product.primaryImage, `thumbnail`)}/>
                             {/if}
-                            <a href={`/dashboard/products/${item.product.id}`} on:click|stopPropagation>{item.product.name}</a>
+                            <a href={`/dashboard/products/${item.product.id}`} on:click|stopPropagation>{item.product.name}</a> 
                         </span>
                     </slot>
                 {:else}
@@ -111,6 +115,9 @@
                 {/each}
             {/await}
         </div>
+    </div>
+{/if}
+
 <style>
     .howto {
         color: gray;

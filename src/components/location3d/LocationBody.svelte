@@ -12,7 +12,7 @@
 	import ContextMenu from "../ContextMenu.svelte";
     import ThreeDMap from './ThreeDMap.svelte';
 	import PlainLocation from "./PlainLocation.svelte";
-
+    
     export let rootTree;
     export let fullTree;
 
@@ -110,7 +110,7 @@
                         <PrimaryButton on:click={() => goto(`/dashboard/tree/${element.id}/edit`)}>편집하기</PrimaryButton>
                         <PrimaryButton on:click={() => doDelete(element)}>삭제하기</PrimaryButton>
                     </div>
-                    <span
+                    <span 
                         class:hovered={hoveredLocation?.id == element?.id}
                         class:selected={selectedLocation?.id == element?.id}
                         on:mouseenter={() => hoveredLocation = element}
@@ -122,7 +122,7 @@
             </TreeView>
         </div>
     {/if}
-    {#if (treeShow&& innerWidth < 1500 || toolbarShow&& innerWidth < 1000) }
+    {#if (treeShow&& innerWidth < 1500 || toolbarShow&& innerWidth < 1000) } 
         <div class="darkbg"/>
     {/if}
     <ThreeDMap locations={rootTree} on:selection={(ev) => {selectedLocation = ev.detail;}}>
@@ -243,7 +243,7 @@
 
         box-shadow: 5px 0 5px black, -5px 0 5px black;
     }
-
+    
     .products {
         position: relative;
         display: none;
@@ -282,7 +282,7 @@
             left: 0;
             max-width: 80vw;
             min-width: 80vw;
-
+            
             border-top-right-radius: 1em;
             border-bottom-right-radius: 1em;
             overflow: hidden;
