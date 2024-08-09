@@ -7,6 +7,9 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  PUBLIC_TURNSTILE_KEY: ${{ vars.TURNSTILE_SITEKEY }}
+
 jobs:
   deploy_to_staging:
     runs-on: ubuntu-latest
