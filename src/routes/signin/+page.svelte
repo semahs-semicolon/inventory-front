@@ -3,7 +3,7 @@
 	import { ACCESS_TOKEN } from '../../stores';
 	let username = '',
 		password = '';
-	import '../tailwind.css';
+	import '../../tailwind.css';
 	const signin = async () => {
 		const resp = await fetch(`${API_URL()}/signin`, {
 			method: 'POST',
