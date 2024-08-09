@@ -9,4 +9,4 @@
 	};
 </script>
 
-<Turnstile siteKey={PUBLIC_TURNSTILE_KEY} on:turnstile-callback={callback} theme="light" />
+<Turnstile siteKey={PUBLIC_TURNSTILE_KEY} on:callback={callback} theme="light" />
