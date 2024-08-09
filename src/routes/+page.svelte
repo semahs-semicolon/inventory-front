@@ -11,9 +11,12 @@
 		if (turnstileToken !== null) {
 			const res = await fetch(`${API_URL()}/guestLogin`, {
 				method: 'POST',
-				body: {
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				},
+				body: JSON.stringify({
 					token: turnstileToken
-				}
+				})
 			});
 			if (res.status === 200) {
 				$ACCESS_TOKEN = await res.text();
