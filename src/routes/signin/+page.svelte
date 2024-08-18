@@ -1,9 +1,9 @@
 <script>
-	import { API_URL } from '../../api';
-	import { ACCESS_TOKEN } from '../../stores';
+	import { API_URL } from '../../api.js';
+	import { ACCESS_TOKEN } from '../../stores/AccessToken.js';
 	let username = '',
 		password = '';
-	import '../../tailwind.css';
+	import { unauthorized, internalServerError } from '../../utils/ErrorHandler.js';
 	const signin = async () => {
 		const resp = await fetch(`${API_URL()}/signin`, {
 			method: 'POST',
@@ -17,10 +17,14 @@
 		});
 		if (resp.status === 200) {
 			$ACCESS_TOKEN = await resp.text();
-
 			location.href = '/dashboard';
+		} else if (resp.status === 401) {
+			unauthorized({
+				message: '로그인에 실패했습니다.',
+				description: '아이디와 비밀번호가 정확한지 확인해주십시오'
+			});
 		} else {
-			alert(await resp.text());
+			internalServerError();
 		}
 	};
 </script>
