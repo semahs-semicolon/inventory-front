@@ -1,16 +1,16 @@
 <script>
-	import Product from "../../../components/product/Product.svelte";
-	import Products from "../../../components/product/Products.svelte";
-	import {goto, preloadData} from '$app/navigation'
-  	import { page } from "$app/stores";
+	import Product from '../../../components/product/Product.svelte';
+	import Products from '../../../components/product/Products.svelte';
+	import { goto, preloadData } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
-	import CloseButton from "../../../components/button/CloseButton.svelte";
-	import { fly } from "svelte/transition";
-	import Search from "../../../components/product/Search.svelte";
-	import PrimaryButton from "../../../components/button/PrimaryButton.svelte";
-	import { CATEGORIES } from "../../../stores";
+	import CloseButton from '../../../components/button/CloseButton.svelte';
+	import { fly } from 'svelte/transition';
+	import Search from '../../../components/product/Search.svelte';
+	import PrimaryButton from '../../../components/button/PrimaryButton.svelte';
+	import { CATEGORIES } from '../../../stores/stores.js';
 
 	export let data;
 
@@ -18,53 +18,66 @@
 		$CATEGORIES[category.categoryId] = category;
 	}
 
-
-	const open = writable({should: false, open: false});
+	const open = writable({ should: false, open: false });
 	let innerWidth = 10000;
 	let innerHeight;
-	
-	setContext('menu-context', open);
-	
-	$: $open.should = innerWidth < 1000;
 
+	setContext('menu-context', open);
+
+	$: $open.should = innerWidth < 1000;
 </script>
+
 <svelte:window bind:innerWidth bind:innerHeight />
 <div class="loadingbar"></div>
 <div class="wrapper">
 	{#if innerWidth < 1000 && $open.open}
-	<div class="bg"/>
+		<div class="bg" />
 	{/if}
 	{#if innerWidth >= 1000 || $open.open || $page.params.id == undefined}
-		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{duration: 250, x: '-100%', opacity: 1}}>
+		<div class="responsive" class:menu={innerWidth < 1000 && $open.open} transition:fly={{ duration: 250, x: '-100%', opacity: 1 }}>
 			<Search>
 				<div slot="product" let:product>
-					<Product {product} selected={$page.params?.id == product.id} 
-					on:click={() => {goto(`/dashboard/products/${product.id}`); $open.open = false;}}
-					on:mouseover={() => {preloadData(`/dashboard/orphans/${product.id}`)}}
-					on:mousedown={() => {preloadData(`/dashboard/orphans/${product.id}`)}}/>
+					<Product
+						{product}
+						selected={$page.params?.id == product.id}
+						on:click={() => {
+							goto(`/dashboard/products/${product.id}`);
+							$open.open = false;
+						}}
+						on:mouseover={() => {
+							preloadData(`/dashboard/orphans/${product.id}`);
+						}}
+						on:mousedown={() => {
+							preloadData(`/dashboard/orphans/${product.id}`);
+						}}
+					/>
 				</div>
 
 				<div slot="header" class="header">
 					{#if $open.open}
 						<div class="toolbarClose">
-							<CloseButton on:click={() => {$open.open = false}}/>
+							<CloseButton
+								on:click={() => {
+									$open.open = false;
+								}}
+							/>
 						</div>
 					{/if}
 				</div>
 			</Search>
 		</div>
 	{/if}
-	<slot/>
+	<slot />
 </div>
 
 <style>
 	.bg {
-        z-index: 30;
-        background-color: #322F37;
-        opacity: 0.4;
-        position: absolute;
-        width: 100%;
-        height: 100%;
+		z-index: 30;
+		background-color: #322f37;
+		opacity: 0.4;
+		position: absolute;
+		width: 100%;
+		height: 100%;
 	}
 	.wrapper {
 		display: flex;
@@ -75,12 +88,12 @@
 	.responsive {
 		display: flex;
 		flex: 1;
-		max-width: 350px;
-		min-width: 350px;
+		max-width: 25vw;
+		min-width: 25vw;
 		z-index: 40;
 		background-color: white;
 	}
-	@media(max-width: 1000px) {
+	@media (max-width: 1000px) {
 		.responsive {
 			flex: 1;
 			align-items: stretch;
