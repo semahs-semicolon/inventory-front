@@ -1,6 +1,7 @@
 module.exports = {
 	root: true,
-	extends: ['eslint:recommended', 'prettier', 'plugin:svelte/recommended'],
+	plugins: ['@typescript-eslint'],
+	extends: ['eslint:recommended', 'prettier', 'plugin:svelte/recommended', 'plugin:@typescript-eslint/recommended'],
 	overrides: [{ files: ['*.svelte']}],
 	parserOptions: {
 		sourceType: 'module',

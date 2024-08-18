@@ -9,4 +9,10 @@
 	};
 </script>
 
-<Turnstile siteKey={PUBLIC_TURNSTILE_KEY} on:callback={callback} theme="light" />
+<Turnstile
+	siteKey={PUBLIC_TURNSTILE_KEY}
+	on:callback={callback}
+	retry="auto"
+	retryInterval="500"
+	theme="light"
+/>

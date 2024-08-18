@@ -1,6 +1,8 @@
 <script>
 	import { setContext } from 'svelte';
 	import { writable } from 'svelte/store';
+	import Alerts from '../components/Alert/Alerts.svelte';
+	import '../app.css';
 	const popup = writable(undefined);
 	setContext('popup', popup);
 
@@ -18,7 +20,7 @@
 </script>
 
 <slot />
-
+<Alerts />
 <div
 	class="contextmenu"
 	style:display={$popup ? 'flex' : 'none'}
@@ -39,7 +41,6 @@
 		display: flex;
 		border-radius: 1em;
 		border-color: black;
-		background-color: #efefef;
 		color: black;
 		border-width: 1px;
 		padding: 1em;
