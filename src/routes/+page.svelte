@@ -1,14 +1,19 @@
 <script>
-	import { API_URL } from '../api';
+	import { API_URL } from '../api.js';
 	import Turnstile from '../components/Turnstile.svelte';
-	import { ACCESS_TOKEN } from '../stores.js';
-	import '../tailwind.css';
+	import { ACCESS_TOKEN } from '../stores/AccessToken.js';
+	import { goto } from '$app/navigation';
+	import { badRequest, internalServerError } from '../utils/ErrorHandler.js';
+	import { addAlert } from '../stores/AlertPopup.js';
+
 	let turnstileToken;
+
 	const onToken = (token) => {
 		turnstileToken = token.detail;
 	};
+
 	const guestLogin = async () => {
-		if (turnstileToken !== null) {
+		if (turnstileToken) {
 			const res = await fetch(`${API_URL()}/guestLogin`, {
 				method: 'POST',
 				headers: {
@@ -20,10 +25,17 @@
 			});
 			if (res.status === 200) {
 				$ACCESS_TOKEN = await res.text();
-				location.href = '/dashboard';
+				goto('/dashboard');
+			} else if (res.status === 400) {
+				badRequest({
+					message: '캡차 검증에 실패하였습니다',
+					description: '페이지를 새로고침하고, 다시 시도해주십시오'
+				});
 			} else {
-				alert(await res.text());
+				internalServerError();
 			}
+		} else {
+			addAlert('접속에 실패했습니다', '캡차를 작성하고 다시 시도해주십시오', 'error', false);
 		}
 	};
 </script>
