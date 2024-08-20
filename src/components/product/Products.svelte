@@ -11,7 +11,7 @@
 	let name = '';
 </script>
 
-<div class="products" class:fixed={fullscreen && creating}>
+<div class="h-full" class:fixed={fullscreen && creating}>
 	{#if creating}
 		<Create
 			bind:productName={$SEARCH}

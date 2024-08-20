@@ -1,62 +1,63 @@
 <script>
-	import { getContext } from "svelte";
+	import { getContext } from 'svelte';
 
-    let popup = getContext('popup')
+	let popup = getContext('popup');
 
-    let x, y;
+	let x, y;
 
-    const contextMenu = (ev) => {
-        ev.preventDefault();
-        x = ev.pageX;
-        y = ev.pageY;
+	const contextMenu = (ev) => {
+		ev.preventDefault();
+		x = ev.pageX;
+		y = ev.pageY;
 
-        $popup = {
-            x: x,
-            y: y,
-            htmlDomElem: menuEl
-        };
-    }
-    const exit = (ev) => {
-        $popup = undefined;
-    }
+		$popup = {
+			x: x,
+			y: y,
+			htmlDomElem: menuEl
+		};
+	};
+	const exit = (ev) => {
+		$popup = undefined;
+	};
 
-    let menuEl;
+	let menuEl;
 </script>
-<svelte:window on:click={exit}/>
+
+<svelte:window on:click={exit} />
 
 <div class="invisible">
-    <div class="um" bind:this={menuEl}>
-        <slot name="menu"/>
-    </div>
+	<div class="menu" bind:this={menuEl}>
+		<slot name="menu" />
+	</div>
 </div>
 
 <div class="container" on:contextmenu={contextMenu}>
-    <slot onContextMenu={contextMenu}></slot>
+	<slot onContextMenu={contextMenu}></slot>
 </div>
 
 <style>
-    .invisible {
-        display: none;
-    }
-    .menu {
-        position: fixed;
-        display: flex;
-        border-radius: 1em;
-        border-color: black;
-        background-color: #EFEFEF;
-        color: black;
-        border-width: 1px;
-        padding: 1em;
-        z-index: 999;
-        border-style: solid;
-        max-width: 300px;
-    }
-    .container {
-        display: flex;
-        position: relative;
-        width: 100%;
-        height: 100%;
-        align-items: stretch;
-        justify-content: stretch;
-    }
+	.invisible {
+		display: none;
+	}
+	.menu {
+		position: fixed;
+		display: flex;
+		border-radius: 1em;
+		border-color: black;
+		background-color: #efefef;
+		color: black;
+		border-width: 1px;
+		padding: 1em;
+		z-index: 999;
+		border-style: solid;
+		max-width: 300px;
+	}
+	.container {
+		display: flex;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		align-items: stretch;
+		justify-content: stretch;
+	}
 </style>

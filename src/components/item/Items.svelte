@@ -62,22 +62,21 @@
 />
 
 {#if location?.id == undefined}
-	<div class="flex flex-col">
+	<div class="flex h-full w-full flex-col">
 		<BoxHeader>
 			<span slot="title">물품</span>
 		</BoxHeader>
-		<div class="flex min-h-32 flex-1 flex-col gap-3 p-2">
-			<h3>위치를 선택하세요</h3>
+		<div class="flex flex-1 flex-col gap-3 p-2">
+			<span class="p-3 text-lg font-medium text-gray-700">위치를 선택하세요</span>
 		</div>
 	</div>
 {:else}
-	<div class="flex flex-col">
+	<div class="flex h-full flex-col">
 		<BoxHeader>
 			<span slot="title">물품 목록</span>
 		</BoxHeader>
-		<hr />
 		<div
-			class="h flex min-h-32 flex-1 flex-col gap-3 p-2"
+			class="flex flex-1 flex-col gap-3 overflow-y-scroll p-2"
 			on:drop={(e) => {
 				e.preventDefault();
 				const dataStr = e.dataTransfer.getData('seda/product');
@@ -110,7 +109,7 @@
 						</div>
 					</slot>
 				{:else}
-					<span class="howto">카탈로그에서 품목을 더블클릭하거나 드래그해서 물품을 추가하세요</span>
+					<span class="p-3 text-lg font-medium text-gray-700">카탈로그에서 품목을 더블클릭하거나 드래그해서 물품을 추가하세요</span>
 				{/each}
 			{/await}
 		</div>

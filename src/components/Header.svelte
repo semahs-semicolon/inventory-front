@@ -74,6 +74,7 @@
 								class="flex items-center px-4 py-3 hover:bg-neutral-200"
 								on:click={() => {
 									goto(`${key.replace('/*', '')}`);
+									routingTableOpen = false;
 								}}
 							>
 								<span class="material-symbols-outlined text-xs font-medium">radio_button_unchecked</span>
