@@ -1,17 +1,23 @@
 <script>
-	import { add_attribute, getContext } from 'svelte/internal';
-	import { API_URL, authfetch, imageIdToUrl } from '../../../../api.js';
+	import { getContext } from 'svelte/internal';
+	import { API_URL, authfetch } from '../../../../api.js';
 	import { injectParentLink, searchId } from '../../../../utils/treeManipulation.js';
-	import PrimaryButton from '../../../../components/button/PrimaryButton.svelte';
-	import { goto } from '$app/navigation';
 	import { CATEGORIES } from '../../../../stores/stores.js';
-	import ThreeDMap from '../../../../components/location3d/ThreeDMap.svelte';
-	import PlainLocation from './PlainLocation.svelte';
 	import BoxHeader from '../../../../components/layout/BoxHeader.svelte';
+	import Info from '../../../../components/product/Info.svelte';
+	import NfcWriter from '../../../../components/nfc/NfcWriter.svelte';
+	import { getProductRecord, NFC } from '../../../../utils/NFC.ts';
 	const open = getContext('menu-context');
 
 	export let data;
 
+	let writer = false;
+	let writeData;
+	$: {
+		if (data) {
+			writeData = getProductRecord(data.product.id);
+		}
+	}
 	const deleteProduct = async () => {
 		await authfetch(`${API_URL()}/products/${data.product.id}`, {
 			method: 'DELETE',
@@ -115,93 +121,28 @@
 
 			<span slot="title">물품 정보</span>
 		</BoxHeader>
-		<div class="flex h-fit flex-col gap-4 p-4">
-			<img class="max-h-[50vh] object-contain" src={imageIdToUrl(data.product.primaryImage, `webp`)} />
-			<hr class="w-full" />
-			<div class="flex w-full flex-col gap-2 px-2">
-				<div class="flex w-full items-center justify-between">
-					<span class="text-2xl font-semibold">{data.product.name}</span>
-					<div class="flex items-center gap-4">
-						<button on:click={() => goto(`/dashboard/products/${data.product.id}/edit`)} class="material-symbols-outlined text-2xl font-medium"
-							>edit</button
-						>
-						<button on:click={deleteProduct} disabled={data.items.length !== 0} class="material-symbols-outlined text-2xl font-medium">delete</button>
-					</div>
+		<Info {data}>
+			{#if NFC.checkCompatibility()}
+				<div class="flex items-center justify-between px-2" slot="other">
+					<button
+						class="rounded-xl bg-[#275eb0] p-3 text-base font-medium text-white"
+						on:click={() => {
+							writer = true;
+						}}>NFC 기록하기</button
+					>
 				</div>
-				<span class="text-base font-medium text-gray-700">
-					{data.product.categoryId == null ? '카테고리: 없음' : '카테고리: ' + getCategoryName(data.product.categoryId)}
-					{!data.product.categoryAccepted ? ' / 카테고리 분류 수락되지 않음' : ''}
-				</span>
-				<span class="text-base font-normal text-gray-600">{data.product.description}</span>
-			</div>
-			<hr class="w-full" />
-			<div class="flex w-full flex-col gap-2 px-2">
-				<span class="text-xl font-medium">저장 위치</span>
-				<span class="text-base font-normal text-gray-700">
-					총 {data.items.map((a) => a.count).reduce((partialSum, a) => partialSum + a, 0)}개가 {data.items.length}곳에 저장되어 있습니다
-				</span>
-				<div class="storage-list">
-					{#each data.items as item}
-						<span
-							class="item"
-							class:item-selected={selectedItem == item}
-							on:click={() => {
-								if (selectedItem != item) {
-									selectedItem = item;
-									setupTreeView();
-								} else {
-									selectedItem = undefined;
-								}
-							}}
-							on:mouseenter={() => (hoveredItem = item)}
-							on:mouseleave={() => (hoveredItem = null)}
-						>
-							<span>{item.count}x</span><span>{getSpecificLocation(item.locationId)}</span>
-						</span>
-					{:else}
-						<h3>물품이 저장된 곳이 없네요</h3>
-					{/each}
-				</div>
-			</div>
-		</div>
+			{/if}
+		</Info>
 	</div>
-	{#if selectedItem !== undefined}
-		<div class="relative">
-			<ThreeDMap locations={visibleTree}>
-				<PlainLocation
-					isRoot={true}
-					realLocation={visibleTree}
-					depth={3}
-					hovered={hoveredItem?.locationId}
-					selected={selectedItem?.locationId}
-					onroute={routeIds.slice(location + 1)}
-				/>
-			</ThreeDMap>
-			<div class="controls">
-				<div class="flex flex-col gap-4 p-4">
-					{#if innerWidth < 1250}
-						<PrimaryButton on:click={() => (selectedItem = undefined)}>창 종료</PrimaryButton>
-					{/if}
-					{#if location > 0}
-						<PrimaryButton on:click={() => goto(`/dashboard/tree/${routeIds[location - 1]}`)}>메인에서 열기</PrimaryButton>
-					{:else}
-						<PrimaryButton on:click={() => goto(`/dashboard`)}>메인에서 열기</PrimaryButton>
-					{/if}
-					<PrimaryButton on:click={() => enterLayer()}>들어가기</PrimaryButton>
-					<PrimaryButton on:click={() => exitLayer()}>나가기</PrimaryButton>
-				</div>
-				<span class="route">
-					{#each route as segment}
-						<span class="segment" class:segment-selected={segment.id == visibleTree.id}>{segment.name}</span>
-						{#if segment !== route[route.length - 1]}
-							&gt;
-						{/if}
-					{/each}
-				</span>
-			</div>
-		</div>
-	{/if}
 </div>
+{#if writer}
+	<NfcWriter
+		{writeData}
+		on:close={() => {
+			writer = false;
+		}}
+	/>
+{/if}
 
 <style>
 	.storage-list {
