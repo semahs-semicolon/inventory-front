@@ -3,6 +3,7 @@
 	import { ACCESS_TOKEN } from '../../stores/AccessToken.js';
 	import { internalServerError, unauthorized } from '../../utils/ErrorHandler.js';
 	import useNFC from '../../hooks/useNFC.ts';
+	import { goto } from '$app/navigation';
 	let username = '',
 		password = '',
 		nickname = '',

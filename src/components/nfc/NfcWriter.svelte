@@ -4,13 +4,20 @@
 	import { createEventDispatcher } from 'svelte';
 	import { NFCRoot } from '../../hooks/useNFC.ts';
 
-	export let data;
+	export let writeData;
 	$: {
 		const nfcMessageInit = {
-			records: data
+			records: writeData
 		};
 		if ($NFCRoot) {
-			$NFCRoot.writeOverride(nfcMessageInit);
+			$NFCRoot
+				.writeOverride(nfcMessageInit)
+				.then(() => {
+					console.log(1);
+				})
+				.catch(() => {
+					console.log(2);
+				});
 		}
 	}
 	let dispatcher = createEventDispatcher();

@@ -5,6 +5,7 @@
 		password = '';
 	import { unauthorized, internalServerError } from '../../utils/ErrorHandler.js';
 	import useNFC from '../../hooks/useNFC.ts';
+	import { goto } from '$app/navigation';
 	const signin = async () => {
 		const resp = await fetch(`${API_URL()}/signin`, {
 			method: 'POST',
