@@ -3,16 +3,19 @@
 	import BoxHeader from '../../../components/layout/BoxHeader.svelte';
 	import useNFC, { NFCResult } from '../../../hooks/useNFC.ts';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	useNFC(true, '/dashboard/nfc/*');
+	onMount(() => {
+		$NFCResult = { id: '', type: '' };
+	});
 	$: {
-		console.log($NFCResult);
 		if ($NFCResult.id) {
 			switch ($NFCResult.type) {
 				case 'PRODUCT':
-					goto(`/dashboard/nfc/${$NFCResult.id}`);
+					goto(`/dashboard/nfc/${$NFCResult.id}/product`);
 					break;
 				case 'LOCATION':
-					goto(`/dashboPard/tree/${$NFCResult.id}`);
+					goto(`/dashboard/tree/${$NFCResult.id}/location`);
 					break;
 			}
 		}
