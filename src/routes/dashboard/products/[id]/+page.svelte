@@ -121,8 +121,8 @@
 
 			<span slot="title">물품 정보</span>
 		</BoxHeader>
-		<Info {data}>
-			{#if NFC.checkCompatibility()}
+		{#if NFC.checkCompatibility()}
+			<Info {data}>
 				<div class="flex items-center justify-between px-2" slot="other">
 					<button
 						class="rounded-xl bg-[#275eb0] p-3 text-base font-medium text-white"
@@ -131,8 +131,10 @@
 						}}>NFC 기록하기</button
 					>
 				</div>
-			{/if}
-		</Info>
+			</Info>
+		{:else}
+			<Info {data} />
+		{/if}
 	</div>
 </div>
 {#if writer}
