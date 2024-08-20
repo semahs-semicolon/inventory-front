@@ -2,6 +2,7 @@
 	import { API_URL } from '../../api.js';
 	import { ACCESS_TOKEN } from '../../stores/AccessToken.js';
 	import { internalServerError, unauthorized } from '../../utils/ErrorHandler.js';
+	import useNFC from '../../hooks/useNFC.ts';
 	let username = '',
 		password = '',
 		nickname = '',
@@ -22,8 +23,8 @@
 		if (resp.status == 200) {
 			const token = await resp.text();
 			$ACCESS_TOKEN = token;
-
-			location.href = '/dashboard';
+			goto('/dashboard');
+			useNFC(false, '/dashboard');
 		} else {
 			internalServerError();
 		}

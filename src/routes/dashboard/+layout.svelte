@@ -1,12 +1,17 @@
 <script>
 	import { onNavigate } from '$app/navigation';
-
 	import Header from '../../components/Header.svelte';
 	import useNFC from '../../hooks/useNFC.ts';
 	import { NFC } from '../../utils/NFC.ts';
 	$: {
 		if (NFC.checkCompatibility()) {
-			useNFC(false, '/dashboard/*');
+			useNFC(false, '/dashboard/category/*');
+			useNFC(false, '/dashboard/categoryConfirm/*');
+			useNFC(false, '/dashboard/notice/*');
+			useNFC(false, '/dashboard/orphans/*');
+			useNFC(false, '/dashboard/products/*');
+			useNFC(false, '/dashboard/tree/*');
+			useNFC(false, '/dashboard');
 		}
 	}
 	onNavigate((navigation) => {
