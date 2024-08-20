@@ -5,6 +5,7 @@
 	import { goto } from '$app/navigation';
 	import { badRequest, internalServerError } from '../utils/ErrorHandler.js';
 	import { addAlert } from '../stores/AlertPopup.js';
+	import useNFC from '../hooks/useNFC.ts';
 
 	let turnstileToken;
 
@@ -26,6 +27,7 @@
 			if (res.status === 200) {
 				$ACCESS_TOKEN = await res.text();
 				goto('/dashboard');
+				useNFC(false, '/dashboard');
 			} else if (res.status === 400) {
 				badRequest({
 					message: '캡차 검증에 실패하였습니다',
@@ -53,9 +55,7 @@
 				class="mx-4 flex w-full items-center justify-center rounded-2xl bg-blue-500 py-2 text-xl font-medium text-white hover:bg-blue-600 hover:drop-shadow-lg"
 				on:click={guestLogin}>접속</button
 			>
-			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/signin"
-				>관리 계정으로 로그인</a
-			>
+			<a class="text-base font-normal text-gray-500 hover:text-gray-600" href="/signin">관리 계정으로 로그인</a>
 		</div>
 		<Turnstile on:token={onToken} />
 	</div>
