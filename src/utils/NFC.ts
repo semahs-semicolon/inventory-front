@@ -81,10 +81,7 @@ export function NFCParseToString(data: NDEFRecord): string {
 }
 
 export function NFCUrlRecord(url: string): NDEFRecordInit {
-	const encoder = new TextEncoder();
-	const uint8Array = encoder.encode(url);
-	const dataView = new DataView(uint8Array.buffer);
-	return { recordType: 'url', data: dataView } as NDEFRecordInit;
+	return { recordType: 'url', data: url } as NDEFRecordInit;
 }
 
 export function NFCTextRecord(text: string): NDEFRecordInit {
