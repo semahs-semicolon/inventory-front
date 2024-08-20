@@ -3,6 +3,7 @@
 	import { writable } from 'svelte/store';
 	import Alerts from '../components/Alert/Alerts.svelte';
 	import '../app.css';
+	import { ProgressBar } from '@prgm/sveltekit-progress-bar';
 	const popup = writable(undefined);
 	setContext('popup', popup);
 
@@ -20,6 +21,7 @@
 </script>
 
 <slot />
+<ProgressBar color="#FFFF00" zIndex={100} />
 <Alerts />
 <div
 	class="contextmenu"
@@ -36,16 +38,8 @@
 	}
 	.contextmenu {
 		position: fixed;
-		z-index: 60;
-		position: fixed;
 		display: flex;
-		border-radius: 1em;
-		border-color: black;
-		color: black;
-		border-width: 1px;
-		padding: 1em;
 		z-index: 999;
-		border-style: solid;
 		max-width: 300px;
 	}
 </style>

@@ -157,6 +157,9 @@
 			selected={selectedLocation?.id}
 			on:selection={(ev) => {
 				selectedLocation = ev.detail;
+				if (innerWidth < 1280) {
+					toolbarShow = true;
+				}
 			}}
 		/>
 	</ThreeDMap>
@@ -165,21 +168,22 @@
 			<MobileControlElement slot="0" callback={() => (treeShow = !treeShow)} icon="account_tree" title="위치 나무" toggle={treeShow} />
 			<MobileControlElement slot="1" callback={() => (toolbarShow = !toolbarShow)} icon="inventory" title="물품 관리" toggle={toolbarShow} />
 			<!--<MobileControlElement slot="2" callback={() => (treeShow = !treeShow)} icon="view_in_ar" title="2D/3D" toggle={treeShow} />-->
-			<MobileControlElement slot="3" callback={() => goto('/dashboard/nfc')} icon="nfc" title="NFC" />
+			<MobileControlElement slot="3" callback={() => goto('/dashboard/nfc')} icon="nfc" title="NFC (beta)" />
 		</MobileControl>
 	{/if}
 	{#if innerWidth >= 1280 || toolbarShow}
 		<div class="products" class:showHidden={toolbarShow} transition:fly={{ duration: 250, x: '100%', opacity: 1 }}>
 			{#if toolbarShow}
-				<div class="toolbarClose">
-					<CloseButton
+				<div class="absolute -left-10 top-0 flex items-center justify-center rounded-l-xl bg-gray-50 p-2.5">
+					<button
+						class="material-symbols-outlined text-2xl font-medium text-gray-800"
 						on:click={() => {
 							toolbarShow = false;
-						}}
-					/>
+						}}>close</button
+					>
 				</div>
 			{/if}
-			<div class={`grid h-full ${toolBarFullBox ? '' : 'max-w-[30vw]'} grid-rows-5`}>
+			<div class={`grid h-full ${toolBarFullBox ? 'max-w-[90vw]' : 'max-w-[30vw]'} grid-rows-5`}>
 				<div class="row-start-1 row-end-3">
 					<Items location={selectedLocation} />
 				</div>

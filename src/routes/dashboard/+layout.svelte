@@ -1,8 +1,14 @@
 <script>
 	import { onNavigate } from '$app/navigation';
-	import { ProgressBar } from '@prgm/sveltekit-progress-bar';
-	import Header from '../../components/Header.svelte';
 
+	import Header from '../../components/Header.svelte';
+	import useNFC from '../../hooks/useNFC.ts';
+	import { NFC } from '../../utils/NFC.ts';
+	$: {
+		if (NFC.checkCompatibility()) {
+			useNFC(false, '/dashboard/*');
+		}
+	}
 	onNavigate((navigation) => {
 		if (!document.startViewTransition) return;
 
@@ -16,7 +22,6 @@
 </script>
 
 <Header />
-<ProgressBar color="#FFFF00" zIndex={100} />
 <div class="container bg-gray-100">
 	<slot />
 </div>

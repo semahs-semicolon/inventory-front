@@ -85,12 +85,12 @@
 	}
 </script>
 
-<div class="flex flex-col">
+<div class="flex h-full w-full flex-col">
 	<BoxHeader>
 		<span slot="title">카탈로그</span>
 		<div class="flex w-min items-center gap-4" slot="other">
-			<div class="relative">
-				<input type="text" on:change {...$$props} placeholder="검색" class="aspect-[5] h-10 rounded-lg bg-gray-300 px-2" bind:value={search} />
+			<div class="relative aspect-[5] h-10">
+				<input type="text" on:change {...$$props} placeholder="검색" class="h-full w-full rounded-lg bg-gray-300 px-2" bind:value={search} />
 				<label for="file-input" class="absolute right-2 top-0 flex h-full items-center justify-center">
 					<span class="material-symbols-outlined text-xl font-medium"> photo_camera </span>
 				</label>
@@ -116,7 +116,7 @@
 			/>
 		</div>
 	</BoxHeader>
-	<div class="flex flex-col gap-3 overflow-y-auto p-4">
+	<div class="flex h-full max-h-full flex-col gap-3 overflow-y-auto p-4">
 		{#await elements}
 			{#each $LAST_SEARCH_RESULT as product}
 				<slot {product} name="product">

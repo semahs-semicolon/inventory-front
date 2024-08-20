@@ -25,5 +25,5 @@ export function badRequest(alert) {
 }
 
 export function internalServerError() {
-	addAlert('내부적인 문제가 발생하였습니다.', 'error', true);
+	addAlert('내부적인 문제가 발생하였습니다.', '', 'error', true);
 }

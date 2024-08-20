@@ -17,7 +17,7 @@
 	});
 </script>
 
-<div class="absolute bottom-0 left-0 flex flex-col gap-5 p-6">
+<div class="absolute bottom-0 left-0 z-50 flex flex-col gap-5 p-6">
 	{#each alerts as alert}
 		<AlertElement alertID={alert.id} {alert} />
 	{/each}

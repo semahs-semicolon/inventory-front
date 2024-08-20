@@ -4,6 +4,10 @@ import { get } from 'svelte/store';
 import { ACCESS_TOKEN } from '../../stores/AccessToken.js';
 import { unauthorized } from '../../utils/ErrorHandler.js';
 
+export const ssr = true;
+export const csr = false;
+export const prerender = false;
+
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
 	if (!get(ACCESS_TOKEN)) {

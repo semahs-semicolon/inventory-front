@@ -4,8 +4,8 @@ export const RouteName = {
 	'/dashboard/notice/*': '공지',
 	'/dashboard/products/*': '물품',
 	'/dashboard/tree/*': '물품 나무',
-	'/dashboard/orphans/*': '분류가 필요한 항목'
-	//'/dashboard/nfc': 'NFC'
+	'/dashboard/orphans/*': '분류가 필요한 항목',
+	'/dashboard/nfc/*': 'NFC'
 };
 
 /**

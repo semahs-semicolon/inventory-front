@@ -4,7 +4,8 @@
 	import { internalServerError, unauthorized } from '../../utils/ErrorHandler.js';
 	let username = '',
 		password = '',
-		nickname = '';
+		nickname = '',
+		code = '';
 	const signup = async () => {
 		const resp = await fetch(`${API_URL()}/users/signup`, {
 			method: 'POST',
@@ -14,7 +15,8 @@
 			body: JSON.stringify({
 				username: username,
 				password: password,
-				nickname: nickname
+				nickname: nickname,
+				verifyCode: code
 			})
 		});
 		if (resp.status == 200) {
@@ -36,19 +38,20 @@
 			<span class="text-4xl font-semibold">과학실 물품 관리 시스템</span>
 		</div>
 		<div class="flex w-full flex-col items-center gap-4">
-			<input type="text" placeholder="아이디" bind:value={username} class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0" />
+			<input type="text" placeholder="아이디" bind:value={username} class="w-full rounded-xl bg-gray-200 p-3 text-lg font-medium focus:outline-0" />
 			<input
 				type="password"
 				placeholder="패스워드"
 				bind:value={password}
-				class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0"
+				class="w-full rounded-xl bg-gray-200 p-3 text-lg font-medium focus:outline-0"
 			/>
 			<input
 				type="text"
 				placeholder="닉네임(별칭)"
 				bind:value={nickname}
-				class="w-full rounded-xl bg-gray-200 p-4 text-lg font-medium focus:outline-0"
+				class="w-full rounded-xl bg-gray-200 p-3 text-lg font-medium focus:outline-0"
 			/>
+			<input type="text" placeholder="인증 코드" bind:value={code} class="w-full rounded-xl bg-gray-200 p-3 text-lg font-medium focus:outline-0" />
 		</div>
 
 		<div class="flex w-full flex-col items-center justify-center gap-4">
