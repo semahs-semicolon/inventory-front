@@ -34,26 +34,20 @@
 		});
 		await reload();
 	}
-	function createManyIdentifier() {
+	async function createManyIdentifier() {
 		const classNum = prompt('classnum');
 		const maxNumber = prompt('maxNumber');
 		const names = prompt('nam split by ","').split(',');
-		const promiseList = [];
 		//loop for maxNumber times
 		for (let i = 0; i < maxNumber; i++) {
-			promiseList.push(
-				authfetch(`${API_URL()}/verifyCode/identifier`, {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json; charset=UTF-8'
-					},
-					body: JSON.stringify({ metadata: JSON.stringify({ classNum, number: i + 1, name: names[i] }) })
-				})
-			);
+			await authfetch(`${API_URL()}/verifyCode/identifier`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json; charset=UTF-8'
+				},
+				body: JSON.stringify({ metadata: JSON.stringify({ classNum, number: i + 1, name: names[i] }) })
+			});
 		}
-		Promise.all(promiseList).then(() => {
-			reload();
-		});
 	}
 </script>
 
