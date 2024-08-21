@@ -34,9 +34,31 @@
 		});
 		await reload();
 	}
+	function createManyIdentifier() {
+		const classNum = prompt('classnum');
+		const maxNumber = prompt('maxNumber');
+		const names = prompt('nam split by ","').split(',');
+		const promiseList = [];
+		//loop for maxNumber times
+		for (let i = 0; i < maxNumber; i++) {
+			promiseList.push(
+				authfetch(`${API_URL()}/verifyCode/identifier`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json; charset=UTF-8'
+					},
+					body: JSON.stringify({ metadata: JSON.stringify({ classNum, number: i + 1, name: names[i] }) })
+				})
+			);
+		}
+		Promise.all(promiseList).then(() => {
+			reload();
+		});
+	}
 </script>
 
 <PrimaryButton on:click={createCode}>생성</PrimaryButton>
+<PrimaryButton on:click={createManyIdentifier}>대량 생성</PrimaryButton>
 <table>
 	<thead>식별자</thead>
 	<tbody>
