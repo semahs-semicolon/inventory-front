@@ -46,25 +46,19 @@
 			reload();
 		});
 	}
-	function createManyCode() {
+	async function createManyCode() {
 		const identifier = prompt('identifier, (split by ",")').split(',');
 		const authority = prompt('authority (null for default)') || ['ROLE_STUDENT'];
-		const promiseList = [];
 		if (identifier.length > 1) {
-			identifier.forEach((i) => {
-				promiseList.push(
-					authfetch(`${API_URL()}/verifyCode/verifyCode`, {
-						method: 'PUT',
-						headers: {
-							'Content-Type': 'application/json; charset=UTF-8'
-						},
-						body: JSON.stringify({ identifier: i, authority })
-					})
-				);
-			});
-			Promise.all(promiseList).then(() => {
-				reload();
-			});
+			for (const i of identifier) {
+				await authfetch(`${API_URL()}/verifyCode/verifyCode`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json; charset=UTF-8'
+					},
+					body: JSON.stringify({ identifier: i, authority })
+				});
+			}
 		}
 	}
 </script>
