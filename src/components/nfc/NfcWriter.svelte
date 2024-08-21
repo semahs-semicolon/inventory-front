@@ -36,7 +36,7 @@
 					}}>close</button
 				>
 			</BoxHeader>
-			<div class="flex w-80 flex-col items-center justify-center bg-neutral-200">
+			<div class="flex w-96 flex-col items-center justify-center bg-neutral-200">
 				<span class="material-symbols-outlined text-7xl text-neutral-800">nfc</span>
 				<span class="text-lg font-medium">NFC 태그를 스캔하세요</span>
 			</div>
