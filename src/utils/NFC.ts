@@ -11,7 +11,7 @@ export class NFC {
 		if (NFC.checkCompatibility()) {
 			this.ndef = new NDEFReader();
 		} else {
-			alert('NFC not supported');
+			throw new Error('nfc not supported');
 		}
 	}
 	async startScan() {

@@ -4,7 +4,11 @@
 	import useNFC, { NFCResult } from '../../../hooks/useNFC.ts';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	useNFC(true, '/dashboard/nfc/*');
+	try {
+		useNFC(true, '/dashboard/nfc/*');
+	} catch (e) {
+		console.error(e);
+	}
 	onMount(() => {
 		$NFCResult = { id: '', type: '' };
 	});
